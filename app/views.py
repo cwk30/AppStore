@@ -1,10 +1,30 @@
 from django.shortcuts import render, redirect
 from django.db import connection
 from django.http import HttpResponse
+from .forms import ParentRegistrationForm, UserLoginForm
 
 # Create your views here.
 def index(request):
     return render(request,'app/landing.html')
+
+def parentloginregister(request):
+    if request.method == 'POST':
+        # Create a form instance and populate it with data from the request (binding):
+        form = ParentRegistrationForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+           
+            return render(request, 'app/parentloginregister.html')
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        
+        userregister_form = ParentRegistrationForm
+        userlogin_form = UserLoginForm
+
+    return render(request, 'app/parentloginregister.html',{'userregister_form': userregister_form, 'userlogin_form':userlogin_form})
 
 # def index(request):
 #     """Shows the main page"""
