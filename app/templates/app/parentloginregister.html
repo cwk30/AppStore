@@ -47,6 +47,11 @@
 							<h2 class="major">Login</h2>
 							<form method="POST">
 								{% csrf_token  %}
+								{% if messages %}
+									{% for message in messages %}
+									<p>{{ message }}</p>
+									{% endfor %}
+								{% endif %}
 								<div class="fields">
 
 									<div class="field half">

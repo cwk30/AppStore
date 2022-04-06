@@ -9,10 +9,11 @@ class ParentRegistrationForm(forms.Form):
     nric = forms.CharField(label='NRIC', max_length=100)
     password = forms.CharField(widget = forms.PasswordInput())
     confirm_password = forms.CharField(widget = forms.PasswordInput())
-    date_of_birth = forms.DateField(label='Date of Birth', widget=forms.SelectDateWidget)
+    date_of_birth = forms.DateField(label='Date of Birth', widget=forms.SelectDateWidget(years=range(1950, 2012)))
     first_name = forms.CharField(max_length = 200)
     last_name = forms.CharField(max_length = 200)
     
+
     
     # username =  StringField("Username", validators=[Required(), Length(min=2, max=20)])
     # #name =  StringField("Name", validators=[Required(), Length(min=1, max=40)]) 
