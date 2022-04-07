@@ -1,0 +1,131 @@
+<html>
+<body>
+    <h2>Add New Job</h2>
+    <a href="/">Back to home</a>
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <p style="color:red">{{ status|safe }}</p>
+    <!-- Create Job -->
+    <article id="create_job">
+        <h2 class="major">Create Job</h2>
+        <form method="POST" action="">
+            {% csrf_token  %}
+            <div class="fields">
+                <div class="field half">
+                    {{ createjob_form.start_date.label }}
+
+                    {% if createjob_form.start_date.errors %}  
+                        {{ createjob_form.start_date}}
+                        <div class="invalid-feedback">
+                            {% for error in createjob_form.start_date.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ createjob_form.start_date }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ createjob_form.start_time.label }}
+
+                    {% if createjob_form.start_time.errors %}  
+                        {{ createjob_form.start_time}}
+                        <div class="invalid-feedback">
+                            {% for error in createjob_form.start_time.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ createjob_form.start_time }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ createjob_form.end_date.label }}
+
+                    {% if createjob_form.end_date.errors %}  
+                        {{ createjob_form.end_date}}
+                        <div class="invalid-feedback">
+                            {% for error in createjob_form.end_date.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ createjob_form.end_date }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ createjob_form.end_time.label }}
+
+                    {% if createjob_form.end_time.errors %}  
+                        {{ createjob_form.end_time}}
+                        <div class="invalid-feedback">
+                            {% for error in createjob_form.end_time.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ createjob_form.end_time }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ createjob_form.rate.label }}
+
+                    {% if createjob_form.rate.errors %}  
+                        {{ createjob_form.rate}}
+                        <div class="invalid-feedback">
+                            {% for error in createjob_form.rate.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ createjob_form.rate }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ createjob_form.experience_req.label }}
+
+                    {% if createjob_form.experience_req.errors %}  
+                        {{ createjob_form.experience_req}}
+                        <div class="invalid-feedback">
+                            {% for error in createjob_form.experience_req.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ createjob_form.experience_req }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ createjob_form.job_requirement.label }}
+
+                    {% if createjob_form.job_requirement.errors %}  
+                        {{ createjob_form.job_requirement}}
+                        <div class="invalid-feedback">
+                            {% for error in createjob_form.job_requirement.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ createjob_form.job_requirement }}
+                    {% endif %}
+                </div>
+      
+            </div>
+            <ul class="actions">
+                <li><input type="submit" value=Submit></li>
+            </ul>
+
+        </form>
+    </article>
+</body>
+</html>
+
