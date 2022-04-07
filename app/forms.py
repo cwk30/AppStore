@@ -13,6 +13,14 @@ class UserRegistrationForm(forms.Form):
     first_name = forms.CharField(max_length = 200)
     last_name = forms.CharField(max_length = 200)
     
+class JobCreationForm(forms.Form):
+    start_date = forms.DateField(label='Start Date',widget=forms.SelectDateWidget(years=range(2022, 2023)))
+    start_time = forms.CharField(label='Start Time', max_length=100)
+    end_date = forms.DateField(label='End Date',widget=forms.SelectDateWidget(years=range(2022, 2023)))
+    end_time = forms.CharField(label='End Time', max_length=100)
+    rate = forms.CharField(max_length = 5)
+    experience_req = forms.CharField(max_length = 3)
+    job_requirement = forms.CharField(max_length = 500)
 
     
     # username =  StringField("Username", validators=[Required(), Length(min=2, max=20)])
