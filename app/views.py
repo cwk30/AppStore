@@ -3,6 +3,7 @@ from django.db import connection
 from django.http import HttpResponse
 from .forms import ParentRegistrationForm, UserLoginForm
 from django.contrib import messages
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from .models import usersext
 
@@ -24,8 +25,14 @@ def parentloginregister(request):
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
             return redirect('/parent#login')
         if userlogin_form.is_valid():
-            messages.info(request, 'Login Successful')
-            return redirect('/parent#login')
+            user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
+            if user is not None:
+                messages.info(request, 'Login Successful')
+                return redirect('/parent#login')
+            else:
+                messages.info(request, 'Login fail')
+                return redirect('/parent#login')
+            
     # If this is a GET (or any other method) create the default form.
     else:
         
