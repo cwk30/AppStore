@@ -4,7 +4,7 @@ class UserLoginForm(forms.Form):
     email=forms.CharField(label='Email', max_length=100)
     password = forms.CharField(widget = forms.PasswordInput())
 
-class ParentRegistrationForm(forms.Form):
+class UserRegistrationForm(forms.Form):
     email = forms.CharField(label='Email', max_length=100)
     nric = forms.CharField(label='NRIC', max_length=100)
     password = forms.CharField(widget = forms.PasswordInput())

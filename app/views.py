@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import connection
 from django.http import HttpResponse
-from .forms import ParentRegistrationForm, UserLoginForm
+from .forms import UserRegistrationForm, UserLoginForm
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -17,7 +17,7 @@ def htmlpreview(request):
 def parentloginregister(request):
     if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
-        userregister_form = ParentRegistrationForm(request.POST)
+        userregister_form = UserRegistrationForm(request.POST)
         userlogin_form = UserLoginForm(request.POST)
         # Check if the form is valid:
         if userregister_form.is_valid():
@@ -39,10 +39,41 @@ def parentloginregister(request):
     # If this is a GET (or any other method) create the default form.
     else:
         
-        userregister_form = ParentRegistrationForm
+        userregister_form = UserRegistrationForm
         userlogin_form = UserLoginForm
 
     return render(request, 'app/parentloginregister.html',{'userregister_form': userregister_form, 'userlogin_form':userlogin_form})
+
+def nannyloginregister(request):
+    if request.method == 'POST':
+        # Create a form instance and populate it with data from the request (binding):
+        userregister_form = UserRegistrationForm(request.POST)
+        userlogin_form = UserLoginForm(request.POST)
+        # Check if the form is valid:
+        if userregister_form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
+            user = User.objects.create_user(username=userregister_form.cleaned_data['email'], password=userregister_form.cleaned_data['password'], first_name=userregister_form.cleaned_data['first_name'], last_name=userregister_form.cleaned_data['last_name'])
+            ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='nanny')
+            ue.save()
+            messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
+            return redirect('/parent#login')
+        if userlogin_form.is_valid():
+            user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
+            if user is not None:
+                messages.info(request, 'Login Successful')
+                return redirect('/nanny#login')
+            else:
+                messages.info(request, 'Login fail')
+                return redirect('/nanny#login')
+            
+    # If this is a GET (or any other method) create the default form.
+    else:
+        
+        userregister_form = UserRegistrationForm
+        userlogin_form = UserLoginForm
+
+    return render(request, 'app/nannyloginregister.html',{'userregister_form': userregister_form, 'userlogin_form':userlogin_form})
+
 
 # def index(request):
 #     """Shows the main page"""
