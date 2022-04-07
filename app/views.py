@@ -11,6 +11,9 @@ from .models import usersext
 def index(request):
     return render(request,'app/landing.html')
 
+def htmlpreview(request):
+    return render(request, 'app/elements.html')
+
 def parentloginregister(request):
     if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
