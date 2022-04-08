@@ -17,6 +17,16 @@ class jobs(models.Model):
     start_time = models.TimeField()
     end_date = models.DateField()
     end_time = models.TimeField()
-    rate = models.CharField(max_length = 4)
-    experience_req = models.CharField(max_length = 2)
+    rate = models.CharField(max_length = 5)
+    experience_req = models.CharField(max_length = 3)
     job_requirement = models.TextField(('describe the job requirement'), max_length=500, blank=True)
+
+class nanny(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    start_time = models.TimeField()
+    end_date = models.DateField()
+    end_time = models.TimeField()
+    rate = models.CharField(max_length = 5)
+    experience = models.CharField(max_length = 3)
+    about_me = models.TextField(('describe yourself'), max_length=500,blank=True)

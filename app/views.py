@@ -1,12 +1,14 @@
+from cmd import IDENTCHARS
 from django.shortcuts import render, redirect
 from django.db import connection
 from django.http import HttpResponse
-from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm
+from .forms import NannyAvailableForm, UserRegistrationForm, UserLoginForm, JobCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import usersext, jobs
+from .models import usersext, jobs, nanny
 from django.contrib.auth.decorators import login_required
+from collections import namedtuple
 
 # Create your views here.
 def index(request):
@@ -103,6 +105,58 @@ def parentcreatejob(request):
         createjob_form = JobCreationForm
         
     return render(request, 'app/parentcreatejob.html',{'createjob_form': createjob_form})
+
+def namedtuplefetchall(cursor):
+    "Return all rows from a cursor as a namedtuple"
+    desc = cursor.description
+    nt_result = namedtuple('Result', [col[0] for col in desc])
+    return [nt_result(*row) for row in cursor.fetchall()]
+
+@login_required
+def nannyscheduleview(request):
+    print(request.user)
+    """Shows the main page"""
+    ## Use raw query to get a customer
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
+        #results = namedtuplefetchall(cursor)
+        nanny_schedule = cursor.fetchone()
+    nanny_dict = {'results': nanny_schedule}
+    return render(request, 'app/nannyscheduleview.html',nanny_dict)
+
+@login_required
+def nannyscheduleadd(request):
+    # Create a form instance and populate it with data from the request (binding):
+    nannyavail_form = NannyAvailableForm(request.POST)
+    # Check if the form is valid:
+    if nannyavail_form.is_valid():
+        # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
+        current_user = request.user
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM app_nanny WHERE user = current_user")
+        availability = nanny(user=current_user, 
+                                start_date=nannyavail_form.cleaned_data['start_date'], 
+                                start_time=nannyavail_form.cleaned_data['start_time'],
+                                end_date=nannyavail_form.cleaned_data['end_date'],
+                                end_time=nannyavail_form.cleaned_data['end_time'],
+                                rate=nannyavail_form.cleaned_data['rate'],
+                                experience=nannyavail_form.cleaned_data['experience'],
+                                about_me = nannyavail_form.cleaned_data['about_me'])
+        availability.save()
+        messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
+        return redirect('/nannyscheduleadd')
+
+    else:
+        nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
+
+    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})
+
+
+
+
+
+#-----------------------------------------------------------------------------------------------------------------------------------------#
+
 # def index(request):
 #     """Shows the main page"""
 
@@ -170,7 +224,7 @@ def edit(request, id):
 
     # fetch the object related to passed id
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM customers WHERE customerid = %s", [id])
+        cursor.execute("SELECT * FROM nanny WHERE user = %s", [id])
         obj = cursor.fetchone()
 
     status = ''
@@ -179,7 +233,7 @@ def edit(request, id):
     if request.POST:
         ##TODO: date validation
         with connection.cursor() as cursor:
-            cursor.execute("UPDATE customers SET first_name = %s, last_name = %s, email = %s, dob = %s, since = %s, country = %s WHERE customerid = %s"
+            cursor.execute("UPDATE nanny SET first_name = %s, last_name = %s, email = %s, dob = %s, since = %s, country = %s WHERE customerid = %s"
                     , [request.POST['first_name'], request.POST['last_name'], request.POST['email'],
                         request.POST['dob'] , request.POST['since'], request.POST['country'], id ])
             status = 'Customer edited successfully!'
@@ -191,3 +245,4 @@ def edit(request, id):
     context["status"] = status
  
     return render(request, "app/edit.html", context)
+
