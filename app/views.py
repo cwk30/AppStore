@@ -138,17 +138,18 @@ def nannyedit(request):
 
     status = ''
     # save the data from the form
-    with connection.cursor() as cursor:
-        cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
-                    , [request.POST['start_date'], request.POST['end_date'], request.POST['start_time'],
-                        request.POST['end_time'] , request.POST['rate'], request.POST['experience'], request.POST['about_me']])
-        status = 'Customer edited successfully!'
-        cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
-        obj = cursor.fetchone()
-        print(obj)
+    if request.POST:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
+                        , [request.POST['start_date'], request.POST['end_date'], request.POST['start_time'],
+                            request.POST['end_time'] , request.POST['rate'], request.POST['experience'], request.POST['about_me']])
+            status = 'Customer edited successfully!'
+            cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
+            obj = cursor.fetchone()
+            print(obj)
 
-    context["obj"] = obj
-    context["status"] = status
+        context["obj"] = obj
+        context["status"] = status
  
     return render(request, "app/nannyedit.html", context)
 
