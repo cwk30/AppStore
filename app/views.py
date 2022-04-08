@@ -316,14 +316,14 @@ def jobview(request, id):
     ## Use raw query to get the job
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM app_jobs WHERE jobid = %s", [id])
-        view_job = cursor.fetchone()
+        view_job = cursor.fetchone()    
     jobv_dict = {'jobv': view_job}
     status = ''
     # save the data from the form
     if request.POST:
         with connection.cursor() as cursor:
             #check if nanny already applied
-            cursor.execute("SELECT * FROM app_appliednanny WHERE nannyid = %s", request.user)
+            cursor.execute("SELECT * FROM app_appliednanny WHERE nannyid_id = %s", request.user.id)
             curr_nannyid = cursor.fetchone()
             ## No nanny with same id
             if curr_nannyid == None:
@@ -335,6 +335,35 @@ def jobview(request, id):
     
     context['status'] = status
     return render(request,'app/jobview.html',{'jobv': view_job, 'status': status })
+
+@login_required
+def nannyalljobview(request):
+    # dictionary for initial data with field names as keys
+    result_dict ={}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement FROM app_jobs j, app_appliednanny p WHERE j.user_id = p.nannyid_id ORDER BY p.applyid")
+        results = cursor.fetchone()
+
+    result_dict['record']=results
+
+    return render(request, "app/nannyalljobview.html", result_dict)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #---------------
 
