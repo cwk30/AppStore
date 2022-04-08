@@ -47,13 +47,14 @@ urlpatterns = [
     path('elements', app.views.elements, name='Elements'),
     path('index', app.views.index, name='Index 1'),
     path('nanny_view_offer/<str:id>', app.views.nanny_view_offer, name='Nanny view offer'),
+    path('parent_view_sitter/<str:id>', app.views.parent_view_sitter, name='Parent_view_sitter'),
     # path('parentcreatejob', app.views.parentcreatejob, name='parentcreatejob'),
     path('nannyscheduleadd', app.views.nannyscheduleadd, name='nannyscheduleadd'),
-    path('nannyscheduleview', app.views.nannyscheduleview, name='nannyscheduleview'),
+    path('nannyscheduleview', app.views.nannyscheduleview, name='nannyscheduleview')
     # path('nannybrowsejobs', app.views.nannybrowsejobs, name='nannybrowsejobs'),
     # path('parentsbrowsenannies', app.views.parentsbrowsenannies, name='parentsbrowsenannies'),
     #path('jobview/<str:id>', app.views.jobview, name='jobview'),
     #path('nannyview/<str:id>', app.views.nannyview, name='nannyview'),
-    path('nannyedit', app.views.nannyedit, name='nannyedit')
+    # path('nannyedit', app.views.nannyedit, name='nannyedit')
 
 ]
