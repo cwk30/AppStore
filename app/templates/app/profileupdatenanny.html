@@ -1,0 +1,89 @@
+<html>
+<body>
+    <h2>Your Profile Update</h2>
+    <a href="/">Back to home</a>
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <p style="color:red">{{ status|safe }}</p>
+    <!-- Availability  -->
+    <article id="enter_availability">
+        <h2 class="major"> Edit your details </h2>
+        <form method="POST" action="">
+            {% csrf_token  %}
+            <div class="fields">
+                <div class="field half">
+                    {{ userupdate_form.first_name.label }}
+
+                    {% if userupdate_form.first_name.errors %}  
+                        {{ userupdate_form.first_name}}
+                        <div class="invalid-feedback">
+                            {% for error in userupdate_form.first_name.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ userupdate_form.first_name }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ userupdate_form.last_name.label }}
+
+                    {% if userupdate_form.last_name.errors %}  
+                        {{ userupdate_form.last_name}}
+                        <div class="invalid-feedback">
+                            {% for error in userupdate_form.last_name.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ userupdate_form.last_name }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ userupdate_form.email.label }}
+
+                    {% if userupdate_form.email.errors %}  
+                        {{ userupdate_form.email}}
+                        <div class="invalid-feedback">
+                            {% for error in userupdate_form.email.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ userupdate_form.email }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ userupdate_form.dob.label }}
+
+                    {% if userupdate_form.dob.errors %}  
+                        {{ userupdate_form.dob}}
+                        <div class="invalid-feedback">
+                            {% for error in userupdate_form.dob.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ userupdate_form.dob }}
+                    {% endif %}
+                </div>
+
+     
+       
+      
+            </div>
+            <ul class="actions">
+                <li><input type="submit" value=Submit></li>
+            </ul>
+
+        </form>
+    </article>
+</body>
+</html>
+
