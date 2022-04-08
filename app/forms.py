@@ -47,6 +47,13 @@ class NannyFilterForm(forms.Form):
     max_rate = forms.CharField(label='Maximum Rate($)')
     min_experience_req = forms.CharField(label='Minimum Experience Required (Years)')
 
+class UserUpdateForm(forms.Form):
+    first_name = forms.CharField(max_length = 200)
+    last_name = forms.CharField(max_length = 200)
+    email = forms.CharField(label='Email', max_length=100)
+    dob = forms.DateField(label='Date of Birth', widget=forms.SelectDateWidget(years=range(1950, 2012)))
+
+
     
     # username =  StringField("Username", validators=[Required(), Length(min=2, max=20)])
     # #name =  StringField("Name", validators=[Required(), Length(min=1, max=40)]) 
