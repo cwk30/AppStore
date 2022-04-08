@@ -6,7 +6,7 @@ from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm, JobFilt
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import usersext, jobs, nanny
+from .models import usersext, jobs, nanny, appliednanny
 from django.contrib.auth.decorators import login_required
 from collections import namedtuple
 from datetime import datetime
@@ -53,9 +53,6 @@ def index(request):
     return render(request,'app/index.html')
 def index2(request):
     return render(request,'app/index 2.html')
-
-
-    
 
 def parentloginregister(request):
     if request.method == 'POST':
@@ -146,8 +143,6 @@ def parentcreatejob(request):
         
     return render(request, 'app/parentcreatejob.html',{'createjob_form': createjob_form})
 
-
-
 @login_required
 def nannyscheduleview(request):
     print(request.user)
@@ -188,33 +183,6 @@ def nannyedit(request):
         context["status"] = status
  
     return render(request, "app/nannyedit.html", context)
-
-@login_required
-def nannyscheduleadd(request):
-    # Create a form instance and populate it with data from the request (binding):
-    nannyavail_form = NannyAvailableForm(request.POST)
-    # Check if the form is valid:
-    if nannyavail_form.is_valid():
-        # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
-        current_user = request.user
-        with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM app_nanny WHERE user = current_user")
-        availability = nanny(user=current_user, 
-                                start_date=nannyavail_form.cleaned_data['start_date'], 
-                                start_time=nannyavail_form.cleaned_data['start_time'],
-                                end_date=nannyavail_form.cleaned_data['end_date'],
-                                end_time=nannyavail_form.cleaned_data['end_time'],
-                                rate=nannyavail_form.cleaned_data['rate'],
-                                experience=nannyavail_form.cleaned_data['experience'],
-                                about_me = nannyavail_form.cleaned_data['about_me'])
-        availability.save()
-        messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
-        return redirect('/nannyscheduleadd')
-
-    else:
-        nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
-
-    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})
 
 
 
@@ -263,7 +231,8 @@ def nannybrowsejob(request):
         JobFilter_form = JobFilterForm
         with connection.cursor() as cursor:
             cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement FROM auth_user u, app_jobs j WHERE j.user_id=u.id") 
-            results = namedtuplefetchall(cursor)    
+            results = namedtuplefetchall(cursor)   
+        
     return render(request, 'app/nannybrowsejobs.html',{'filterjob_form': JobFilter_form, 'results': results})
 
 # def index(request):
@@ -285,14 +254,54 @@ def nannybrowsejob(request):
 #     return render(request,'app/index.html',result_dict)
 
 # Create your views here.
+#def jobview(request, id):
+#    """Shows the main page"""
+#    ## Use raw query to get the job
+#    with connection.cursor() as cursor:
+#        cursor.execute("SELECT * FROM app_jobs WHERE jobid = %s", [id])
+#        view_job = cursor.fetchone()
+#    result_dict = {'jobv': view_job}
+#    return render(request,'app/jobview.html',result_dict)
+
+def jobview(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+
+    """Shows the main page"""
+    ## Use raw query to get the job
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM app_jobs WHERE jobid = %s", [id])
+        view_job = cursor.fetchone()
+    jobv_dict = {'jobv': view_job}
+    status = ''
+
+    # save the data from the form
+    if request.POST:
+        with connection.cursor() as cursor:
+            #check if nanny already applied
+            cursor.execute("SELECT * FROM app_appliednanny WHERE nannyid = %s", request.user)
+            curr_nannyid = cursor.fetchone()
+            ## No customer with same id
+            if curr_nannyid == None:
+                cursor.execute("INSERT INTO app_appliednanny(%s, %s)", id, request.user)
+                status = 'Applied successfully!'
+                return redirect('nannybrowsejobs')
+            else:
+                status = 'You have already applied!'
+    
+    context['status'] = status
+    return render(request,'app/jobview.html',jobv_dict, context)
+
+#_--------------
+
 def view(request, id):
     """Shows the main page"""
-    
-    ## Use raw query to get a customer
+    ## Use raw query to get the job
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM customers WHERE customerid = %s", [id])
-        customer = cursor.fetchone()
-    result_dict = {'cust': customer}
+        cursor.execute("SELECT * FROM jobs WHERE jobid = %s", [id])
+        view_job = cursor.fetchone()
+    result_dict = {'jobv': view_job}
 
     return render(request,'app/view.html',result_dict)
 
@@ -355,3 +364,30 @@ def edit(request, id):
  
     return render(request, "app/edit.html", context)
 
+#OLD NANNY AVAIL ADD
+@login_required
+def nannyscheduleadd(request):
+    # Create a form instance and populate it with data from the request (binding):
+    nannyavail_form = NannyAvailableForm(request.POST)
+    # Check if the form is valid:
+    if nannyavail_form.is_valid():
+        # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
+        current_user = request.user
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM app_nanny WHERE user = current_user")
+        availability = nanny(user=current_user, 
+                                start_date=nannyavail_form.cleaned_data['start_date'], 
+                                start_time=nannyavail_form.cleaned_data['start_time'],
+                                end_date=nannyavail_form.cleaned_data['end_date'],
+                                end_time=nannyavail_form.cleaned_data['end_time'],
+                                rate=nannyavail_form.cleaned_data['rate'],
+                                experience=nannyavail_form.cleaned_data['experience'],
+                                about_me = nannyavail_form.cleaned_data['about_me'])
+        availability.save()
+        messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
+        return redirect('/nannyscheduleadd')
+
+    else:
+        nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
+
+    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})

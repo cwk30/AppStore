@@ -1,0 +1,55 @@
+<html>
+<body>
+    <h2>Display Details for Job ID {{ jobv.0 }} </h2>
+    <a href="/">Back to home</a>
+    <br/><br/>
+    <table style='text-align:left'>
+        <tr>
+            <th>Start Date</th>
+            <td>:</td>
+            <td> {{ jobv.1 }} </td>
+        </tr>
+        <tr>
+            <th>Start Time</th>
+            <td>:</td>
+            <td> {{ jobv.2 }} </td>
+        </tr>
+        <tr>
+            <th>End Date</th>
+            <td>:</td>
+            <td> {{ jobv.3 }} </td>
+        </tr>
+        <tr>
+            <th>End Time</th>
+            <td>:</td>
+            <td> {{ jobv.4 }} </td>
+        </tr>
+        <tr>
+            <th>Rate (hourly)</th>
+            <td>:</td>
+            <td> {{ jobv.5 }} </td>
+        </tr>
+        <tr>
+            <th>Experience (years)</th>
+            <td>:</td>
+            <td> {{ jobv.6 }} </td>
+        </tr>
+        <tr>
+            <th>Job Description</th>
+            <td>:</td>  
+            <td> {{ jobv.7}} </td>
+        </tr>
+    </table>
+
+     <!-- Create a Form -->
+     <form method="POST">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        <!-- form -->
+        <ul class="actions">
+            <li><input type="Apply" value=Submit></li>
+        </ul>
+    </form>
+
+</body>
+</html>
