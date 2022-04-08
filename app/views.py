@@ -28,8 +28,7 @@ def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
 def nanny_opportunities(request):
     return render(request,'app/Nanny Opportunities.html')
-def nanny_profile_page(request):
-    return render(request,'app/Nanny Profile Page.html')
+
 def nanny_requests(request):
     return render(request,'app/Nanny Requests.html')
 
@@ -341,15 +340,21 @@ def nannyalljobview(request):
     # dictionary for initial data with field names as keys
     result_dict ={}
     with connection.cursor() as cursor:
-        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement FROM app_jobs j, app_appliednanny p WHERE j.user_id = p.nannyid_id ORDER BY p.applyid")
+        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement p.status FROM app_jobs j, app_appliednanny p WHERE j.user_id = p.nannyid_id ORDER BY p.applyid")
         results = cursor.fetchone()
-
     result_dict['record']=results
-
     return render(request, "app/nannyalljobview.html", result_dict)
 
-
-
+@login_required
+def nanny_profile_page(request):
+    current_user = request.user
+    result_dict = {}
+    query = "SELECT e.nric, u.first_name, u.last_name, u.email, e.dob, u.password, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM nanny n, auth_user u, usersext e WHERE u.id = %s and e.role = 'nanny'", current_user.id
+    c = connection.cursor()
+    c.execute(query)
+    results = c.fetchall()
+    result_dict = {'records': results}
+    return render(request,'app/Nanny Profile Page.html',result_dict)
 
 
 

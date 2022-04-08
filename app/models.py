@@ -1,3 +1,4 @@
+from pickle import FALSE
 from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import User
@@ -37,3 +38,4 @@ class appliednanny(models.Model):
     applyid = models.AutoField(primary_key = True)
     jobid = models.ForeignKey(jobs, on_delete=models.CASCADE)
     nannyid = models.ForeignKey(nanny, on_delete=models.CASCADE)
+    accepted = models.BooleanField(default = FALSE)
