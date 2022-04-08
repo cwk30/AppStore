@@ -30,6 +30,10 @@ def nanny_opportunities(request):
     return render(request,'app/Nanny Opportunities.html')
 def nanny_profile_page(request):
     return render(request,'app/Nanny Profile Page.html')
+def nanny_profile_update(request):
+    return render(request,'app/Nanny Profile Update.html')
+def nanny_availability_update(request):
+    return render(request,'app/Nanny Availability Update.html')
 def nanny_requests(request):
     return render(request,'app/Nanny Requests.html')
 
@@ -41,6 +45,9 @@ def parent_offers(request):
     return render(request,'app/Parent offers.html')
 def parent_page(request):
     return render(request,'app/Parent page.html')
+def parent_profile_update(request):
+    return render(request,'app/Parent Profile Update.html')
+
 def parent_profile(request):
     return render(request,'app/Parent profile.html')
 def parent_bookings(request):
