@@ -28,7 +28,20 @@ urlpatterns = [
     path('add', app.views.add, name='add'),
     path('view/<str:id>', app.views.view, name='view'),
     path('edit/<str:id>', app.views.edit, name='edit'),
-    path('htmlpreview', app.views.htmlpreview, name='HTML Preview'),
-    path('parentcreatejob', app.views.parentcreatejob, name='parentcreatejob'),
-    path('nannybrowsejob', app.views.nannybrowsejob, name='nannybrowsejob')
+    path('nanny_application', app.views.nanny_application, name='Application'),
+    path('nanny_page', app.views.nanny_page, name='Nanny Hub'),
+    path('nanny_bookings', app.views.nanny_bookings, name='Nanny Bookings'),
+    path('nanny_opportunities', app.views.nanny_opportunities, name='Opportunities'),
+    path('nanny_profile_page', app.views.nanny_profile_page, name='Nanny Profile Page'),
+    path('nanny_requests', app.views.nanny_requests, name='Requests'),
+    path('parent_browse_sitters', app.views.parents_browse_sitters, name='Browse Sitters'),
+    path('parent_make_offer', app.views.parent_make_offer, name='Make an Offer'),
+    path('parent_offers', app.views.parent_offers, name='Offers'),
+    path('parent_page', app.views.parent_page, name='Parent Hub'),
+    path('parent_profile', app.views.parent_profile, name='Parent Profile Page'),
+    path('parent_bookings', app.views.parent_bookings, name='Parent Bookings'),
+    path('elements', app.views.elements, name='Elements'),
+    path('index', app.views.index, name='Index 1'),
+    path('index2', app.views.index2, name='Index 2')
+
 ]

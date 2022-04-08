@@ -20,9 +20,40 @@ def namedtuplefetchall(cursor):
 # Create your views here.
 def index(request):
     return render(request,'app/landing.html')
+def nanny_application(request):
+    return render(request,'app/Nanny Application.html')
+def nanny_page(request):
+    return render(request,'app/Nanny Page.html')
+def nanny_bookings(request):
+    return render(request,'app/Nanny Bookings.html')
+def nanny_opportunities(request):
+    return render(request,'app/Nanny Opportunities.html')
+def nanny_profile_page(request):
+    return render(request,'app/Nanny Profile Page.html')
+def nanny_requests(request):
+    return render(request,'app/Nanny Requests.html')
 
-def htmlpreview(request):
-    return render(request, 'app/elements.html')
+def parents_browse_sitters(request):
+    return render(request,'app/Parent browse sitter.html')
+def parent_make_offer(request):
+    return render(request,'app/Parents make offers.html')
+def parent_offers(request):
+    return render(request,'app/Parent offers.html')
+def parent_page(request):
+    return render(request,'app/Parent page.html')
+def parent_profile(request):
+    return render(request,'app/Parent profile.html')
+def parent_bookings(request):
+    return render(request,'app/Parent Bookings.html')
+def elements(request):
+    return render(request,'app/elements.html')
+def index(request):
+    return render(request,'app/index.html')
+def index2(request):
+    return render(request,'app/index 2.html')
+
+
+    
 
 def parentloginregister(request):
     if request.method == 'POST':
@@ -46,7 +77,7 @@ def parentloginregister(request):
             else:
                 messages.info(request, 'Login fail')
                 return redirect('/parent#login')
-            
+
     # If this is a GET (or any other method) create the default form.
     else:
         
