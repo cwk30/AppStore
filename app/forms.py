@@ -39,8 +39,13 @@ class JobFilterForm(forms.Form):
     min_rate = forms.IntegerField(label='Minimum Rate($)')
     max_experience_req = forms.IntegerField(label='Maximum Experience Required (Years)')
 
-# class NannyFilterForm(forms.Form):
-#     min_experience_req = forms.IntegerField(label='Maximum Experience Required (Years)')
+class NannyFilterForm(forms.Form):
+    max_start_date = forms.DateField(label='Start Date',widget=forms.SelectDateWidget(years=range(2022, 2023)))
+    max_start_time = forms.TimeField(label='Start Time',widget=forms.TimeInput(format='%H:%M'))
+    min_end_date = forms.DateField(label='End Date',widget=forms.SelectDateWidget(years=range(2022, 2023)))
+    min_end_time = forms.TimeField(label='End Time',widget=forms.TimeInput(format='%H:%M'))
+    max_rate = forms.IntegerField(label='Maximum Rate($)')
+    min_experience_req = forms.IntegerField(label='Minimum Experience Required (Years)')
 
     
     # username =  StringField("Username", validators=[Required(), Length(min=2, max=20)])
