@@ -1,0 +1,51 @@
+<html>
+<body>
+    <h2>Display Details for Nanny {{ fname }} {{ lname }} </h2>
+    <a href="/">Back to home</a>
+    <br/><br/>
+    <table style='text-align:left'>
+        <tr>
+            <th>Available Starting From</th>
+            <td>:</td>
+            <td> {{ nannyv.1 }} </td>
+        </tr>
+        <tr>
+            <th>Working Hours</th>
+            <td>:</td>
+            <td> {{ nannyv.2 }} - {{ nannyv.4 }}  </td>
+        </tr>
+        <tr>
+            <th>Available Until</th>
+            <td>:</td>
+            <td> {{ nannyv.3 }} </td>
+        </tr>
+
+        <tr>
+            <th>Rate (hourly)</th>
+            <td>:</td>
+            <td> {{ nannyv.5 }} </td>
+        </tr>
+        <tr>
+            <th>Experience (years)</th>
+            <td>:</td>
+            <td> {{ nannyv.6 }} </td>
+        </tr>
+        <tr>
+            <th>About Me</th>
+            <td>:</td>  
+            <td> {{ nannyv.7}} </td>
+        </tr>
+    </table>
+
+     <!-- Create a Form -->
+     <form method="POST">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        <!-- form -->
+        <ul class="actions">
+            <li><input type="Submit" value="Request to Connect"></li>
+        </ul>
+    </form>
+
+</body>
+</html>
