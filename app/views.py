@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.db import connection
 from django.http import HttpResponse
-from .forms import UserRegistrationForm, UserLoginForm
+from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm
 from django.contrib import messages
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import usersext
+from .models import usersext, jobs
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -61,6 +62,7 @@ def parentloginregister(request):
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
+                login(request, user)
                 messages.info(request, 'Login Successful')
                 return redirect('/parent#login')
             else:
@@ -91,6 +93,7 @@ def nannyloginregister(request):
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
+                login(request, user)
                 messages.info(request, 'Login Successful')
                 return redirect('/nanny#login')
             else:
@@ -105,7 +108,32 @@ def nannyloginregister(request):
 
     return render(request, 'app/nannyloginregister.html',{'userregister_form': userregister_form, 'userlogin_form':userlogin_form})
 
-
+@login_required
+def parentcreatejob(request):
+    if request.method == 'POST':
+        # Create a form instance and populate it with data from the request (binding):
+        createjob_form = JobCreationForm(request.POST)
+        # Check if the form is valid:
+        if createjob_form.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
+            current_user = request.user
+            print(current_user.id)        
+            new_job = jobs(user=current_user, 
+                        start_date=createjob_form.cleaned_data['start_date'], 
+                        start_time=createjob_form.cleaned_data['start_time'],
+                        end_date=createjob_form.cleaned_data['end_date'],
+                        end_time=createjob_form.cleaned_data['end_time'],
+                        rate=createjob_form.cleaned_data['rate'],
+                        experience_req=createjob_form.cleaned_data['experience_req'],
+                        job_requirement=createjob_form.cleaned_data['job_requirement'])
+            new_job.save()
+            messages.info(request, 'Your job creation is successful! Eligible nannies can now see the job you created')
+            return redirect('/parentcreatejob')
+    # If this is a GET (or any other method) create the default form.
+    else:
+        createjob_form = JobCreationForm
+        
+    return render(request, 'app/parentcreatejob.html',{'createjob_form': createjob_form})
 # def index(request):
 #     """Shows the main page"""
 
