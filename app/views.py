@@ -125,6 +125,37 @@ def nannyscheduleview(request):
     return render(request, 'app/nannyscheduleview.html',nanny_dict)
 
 @login_required
+def nannyedit(request):
+
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+
+    # fetch the object related to passed id
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
+        obj = cursor.fetchone()
+
+    status = ''
+    # save the data from the form
+    with connection.cursor() as cursor:
+        cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
+                    , [request.POST['start_date'], request.POST['end_date'], request.POST['start_time'],
+                        request.POST['end_time'] , request.POST['rate'], request.POST['experience'], request.POST['about_me']])
+        status = 'Customer edited successfully!'
+        cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
+        obj = cursor.fetchone()
+        print(obj)
+
+    context["obj"] = obj
+    context["status"] = status
+ 
+    return render(request, "app/nannyedit.html", context)
+
+
+
+
+@login_required
 def nannyscheduleadd(request):
     # Create a form instance and populate it with data from the request (binding):
     nannyavail_form = NannyAvailableForm(request.POST)
@@ -224,7 +255,7 @@ def edit(request, id):
 
     # fetch the object related to passed id
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM nanny WHERE user = %s", [id])
+        cursor.execute("SELECT * FROM customers WHERE user = %s", [id])
         obj = cursor.fetchone()
 
     status = ''
@@ -233,7 +264,7 @@ def edit(request, id):
     if request.POST:
         ##TODO: date validation
         with connection.cursor() as cursor:
-            cursor.execute("UPDATE nanny SET first_name = %s, last_name = %s, email = %s, dob = %s, since = %s, country = %s WHERE customerid = %s"
+            cursor.execute("UPDATE customers SET first_name = %s, last_name = %s, email = %s, dob = %s, since = %s, country = %s WHERE customerid = %s"
                     , [request.POST['first_name'], request.POST['last_name'], request.POST['email'],
                         request.POST['dob'] , request.POST['since'], request.POST['country'], id ])
             status = 'Customer edited successfully!'
