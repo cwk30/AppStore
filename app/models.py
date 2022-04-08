@@ -22,8 +22,7 @@ class jobs(models.Model):
     job_requirement = models.TextField(('describe the job requirement'), max_length=500, blank=True)
 
 class nanny(models.Model):
-    # user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     start_date = models.DateField()
     start_time = models.TimeField()
     end_date = models.DateField()
@@ -31,3 +30,14 @@ class nanny(models.Model):
     rate = models.IntegerField()
     experience = models.IntegerField()
     about_me = models.TextField(('describe yourself'), max_length=500,blank=True)
+    
+class appliednanny(models.Model):
+    applyid = models.AutoField(primary_key = True)
+    jobid = models.ForeignKey(jobs, on_delete=models.CASCADE)
+    nannyid = models.ForeignKey(nanny, on_delete=models.CASCADE)
+
+class request(models.Model):
+    requestid = models.AutoField(primary_key = True)
+    fromparent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sample1')
+    tositter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sample2')
+    status = models.CharField(max_length=16)

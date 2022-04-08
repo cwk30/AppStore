@@ -6,7 +6,7 @@ from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm, JobFilt
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-from .models import usersext, jobs, nanny
+from .models import usersext, jobs, nanny, appliednanny, request
 from django.contrib.auth.decorators import login_required
 from collections import namedtuple
 from datetime import datetime
@@ -177,41 +177,15 @@ def nannyedit(request):
         if nannyavail_form.is_valid():
             # print("%s %s %s %s %s %s %s %s %s %s %s",min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(min_experience_req), min_start_time.strftime("%-H"),min_start_time.strftime("%-H"),min_start_time.strftime("%-M"), max_end_time.strftime("%-H"),max_end_time.strftime("%-H"),max_end_time.strftime("%-M"))
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
+                cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id AND n.user_id = %s"
                         , [nannyavail_form.cleaned_data['start_date'], nannyavail_form.cleaned_data['end_date'], nannyavail_form.cleaned_data['start_time'],
-                            nannyavail_form.cleaned_data['end_time'] , nannyavail_form.cleaned_data['rate'], nannyavail_form.cleaned_data['experience'], nannyavail_form.cleaned_data['about_me']])
+                            nannyavail_form.cleaned_data['end_time'] , nannyavail_form.cleaned_data['rate'], nannyavail_form.cleaned_data['experience'], nannyavail_form.cleaned_data['about_me'], str(request.user.id)])
             return redirect('/nannyscheduleview')
     # If this is a GET (or any other method) create the default form.
     else:
         nannyavail_form = NannyAvailableForm
     
     return render(request, 'app/nannyedit.html',{'nannyavail_form': nannyavail_form})
-    # # dictionary for initial data with
-    # # field names as keys
-    # context ={}
-
-    # # fetch the object related to passed id
-    # with connection.cursor() as cursor:
-    #     cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
-    #     obj = cursor.fetchone()
-
-    # status = ''
-    # # save the data from the form
-    # if request.POST:
-    #     print(request.POST)
-    #     with connection.cursor() as cursor:
-    #         cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
-    #                     , [request.POST['start_date'], request.POST['end_date'], request.POST['start_time'],
-    #                         request.POST['end_time'] , request.POST['rate'], request.POST['experience'], request.POST['about_me']])
-    #         status = 'Customer edited successfully!'
-    #         cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
-    #         obj = cursor.fetchone()
-    #         print(obj)
-
-    #     context["obj"] = obj
-    #     context["status"] = status
- 
-    # return render(request, "app/nannyedit.html", context)
 
 @login_required
 def nannyscheduleadd(request):
@@ -222,7 +196,7 @@ def nannyscheduleadd(request):
         # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
         current_user = request.user
         with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM app_nanny WHERE user = current_user")
+            cursor.execute("DELETE FROM app_nanny WHERE user_id = %s",str(current_user.id))
         availability = nanny(user=current_user, 
                                 start_date=nannyavail_form.cleaned_data['start_date'], 
                                 start_time=nannyavail_form.cleaned_data['start_time'],
@@ -320,6 +294,71 @@ def parentsbrowsenannies(request):
             cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/parentsbrowsenannies.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
+
+def jobview(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+    """Shows the main page"""
+    ## Use raw query to get the job
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM app_jobs WHERE jobid = %s", [id])
+        view_job = cursor.fetchone()
+    jobv_dict = {'jobv': view_job}
+    status = ''
+    
+    # save the data from the form
+    if request.POST:
+        current_user = request.user
+        with connection.cursor() as cursor:
+            #check if nanny already applied
+            cursor.execute('SELECT id FROM app_nanny WHERE user_id = %s', [str(current_user.id)])
+            results = namedtuplefetchall(cursor)
+            print(results[0][0])
+            cursor.execute("SELECT * FROM app_appliednanny WHERE nannyid_id = %s", [str(results[0][0])])
+            curr_nannyid = cursor.fetchone()
+            ## No nanny with same id
+            if curr_nannyid == None:
+                cursor.execute("INSERT INTO app_appliednanny (jobid_id,nannyid_id) VALUES (%s, %s)", [str(id), str(results[0][0])])
+                status = 'Applied successfully!'
+                return redirect('/nanny_opportunities')
+            else:
+                status = 'You have already applied!'
+    
+    context['status'] = status
+    return render(request,'app/jobview.html',{'jobv': view_job, 'status': status })
+
+def nannyview(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+    """Shows the main page"""
+    ## Use raw query to get the job
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM app_nanny WHERE id = %s", [id])
+        view_nanny = cursor.fetchone()
+    nannyv_dict = {'nannyv': view_nanny}
+    targetuser = User.objects.get(id=nannyv_dict["nannyv"][8])
+        
+    status = ''
+    # save the data from the form
+    if request.POST:
+        current_user = request.user
+        with connection.cursor() as cursor:
+            #check if nanny already applied
+            cursor.execute('SELECT requestid FROM app_request WHERE fromparent_id = %s', [str(current_user.id)])
+            curr_nannyid = cursor.fetchone()
+            ## No nanny with same id
+            if curr_nannyid == None:
+                cursor.execute("INSERT INTO app_request (tositter_id, fromparent_id, status) VALUES (%s, %s, 'pending')", [str(nannyv_dict["nannyv"][8]),str(current_user.id)])
+                status = 'Requested successfully!'
+                return redirect('/parentsbrowsenannies')
+            else:
+                status = 'You have already requested!'
+    
+    context['status'] = status
+    return render(request,'app/nannyview.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
+
 
 # def index(request):
 #     """Shows the main page""" 
