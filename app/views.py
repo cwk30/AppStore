@@ -315,7 +315,7 @@ def jobview(request, id):
             curr_nannyid = cursor.fetchone()
             ## No nanny with same id
             if curr_nannyid == None:
-                cursor.execute("INSERT INTO app_appliednanny (jobid_id,nannyid_id) VALUES (%s, %s)", [str(id), str(results[0][0])])
+                cursor.execute("INSERT INTO app_appliednanny (jobid_id,nannyid_id,status) VALUES (%s, %s,'pending')", [str(id), str(results[0][0])])
                 status = 'Applied successfully!'
                 return redirect('/nanny_opportunities')
             else:
@@ -354,7 +354,24 @@ def nannyview(request, id):
     
     context['status'] = status
     return render(request,'app/nannyview.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
+def nannyreqs(request):
+    """Shows the main page""" 
 
+    ## Delete customer
+    if request.POST:
+        current_user = request.user
+        if request.POST['action'] == 'delete':
+            with connection.cursor() as cursor:
+                cursor.execute("DELETE FROM customers WHERE customerid = %s", [request.POST['id']])
+
+    ## Use raw query to get all objects
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM request WHERE tositter_id= %s",[str(current_user.id)])
+        requests = cursor.fetchall()
+
+    result_dict = {'records': requests}
+
+    return render(request,'app/nannyreqs.html',result_dict)
 
 # def index(request):
 #     """Shows the main page""" 
