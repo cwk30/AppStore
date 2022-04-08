@@ -43,23 +43,23 @@
 										<div class="fields">
 											<div class="field quarter">
 												<label for="first name">First Name</label>
-												<p>first name</p>
+												<p>{{ records.1 }}</p>
 											</div>
 											<div class="field quarter">
-												<label for="last name">First Name</label>
-												<p>last name</p>
+												<label for="last name">Last Name</label>
+												<p>{{ records.2 }}</p>
 											</div>
 											<div class="field half">
 												<label for="email">Email</label>
-												<p>email</p>
+												<p>{{ records.3 }}</p>
 											</div>
-											<div class="field half">
+											<div class="field third">
 												<label for="NRIC">NRIC</label>
-												<p>NRIC no</p>
+												<p>{{ records.0 }}</p>
 											</div>
-											<div class="field half">
-												<label for="Password">Passowrd</label>
-												<p>Password</p>
+											<div class="field third">
+												<label for="DOB">Date of Birth</label>
+												<p>{{ records.4 }}</p>
 											</div>
 										</div>
 										<ul class="actions">
@@ -76,28 +76,32 @@
 										<div class="fields">
 											<div class="field quarter">
 												<label for="Start Date">Start Date</label>
-												<p>Start Date</p>
+												<p>{{ records.6 }}</p>
 											</div>
 											<div class="field quarter">
 												<label for="End Date">End Date</label>
-												<p>End date</p>
+												<p>{{ records.7 }}</p>
 											</div>
 											<div class="field quarter">
 												<label for="Start Time">Start Time</label>
-												<p>Start Time</p>
+												<p>{{ records.8 }}</p>
 											</div>
 											<div class="field quarter">
 												<label for="End Time">End Time</label>
-												<p>End Time</p>
+												<p>{{ records.9 }}</p>
 											</div>
 											<div class="field half">
 												<label for="Year of Experience">Year of Experience</label>
-												<p>Year of Experience</p>
+												<p>{{ records.11 }}</p>
 											</div>
 											<div class="field half">
 												<label for="Rate">Rate</label>
-												<p>Rate</p>
+												<p>{{ records.10 }}</p>
 											</div>
+											<div class="field ">
+												<label for="About me">About me</label>
+												<p>{{ records.12 }}</p>
+											</div
 										</div>
 										<ul class="actions">
 											<li><a href="{% url 'Nanny Availability Update' %}" class="button">Update Availability and Experience</a></li>

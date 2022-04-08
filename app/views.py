@@ -339,8 +339,10 @@ def jobview(request, id):
 def nannyalljobview(request):
     # dictionary for initial data with field names as keys
     result_dict ={}
+    current_user = request.user
     with connection.cursor() as cursor:
-        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement p.status FROM app_jobs j, app_appliednanny p WHERE j.user_id = p.nannyid_id ORDER BY p.applyid")
+        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement p.status FROM app_jobs j, app_appliednanny p WHERE j.user_id = %s ORDER BY p.applyid"
+                        , [current_user.id])
         results = cursor.fetchone()
     result_dict['record']=results
     return render(request, "app/nannyalljobview.html", result_dict)
@@ -351,13 +353,38 @@ def nanny_profile_page(request):
     current_user = request.user
     result_dict = {}
     with connection.cursor() as cursor:
-        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob, u.password, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM app_nanny n, auth_user u, app_usersext e WHERE u.id = %s and e.role = 'nanny'"
-                        , [current_user.id] )
-        results = cursor.fetchall()
-    result_dict = {'records': results}
+        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob, u.password, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u left join app_usersext e on  u.id = e.user_id left join app_nanny n on u.id = n.user_id where u.id = %s"
+                        , [current_user.id])
+        results = cursor.fetchone()
+    result_dict['records'] = results
     return render(request,'app/Nanny Profile Page.html',result_dict)
 
 def nanny_profile_update(request):
+    # dictionary for initial data with
+    # field names as keys
+    context ={}
+    current_user = request.user
+    # fetch the object related to passed id
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
+        obj = cursor.fetchone()
+
+    status = ''
+    # save the data from the form
+    if request.POST:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE e.app_userext, u.auth_user, SET e.nric = %s, e.dob = %s, u.first_name = %s, u.last_name = %s, u.email = %s, u.password = %s FROM auth_user u, app_userext e WHERE u.id = %s"
+                        , [request.POST['nric'], request.POST['dob'], request.POST['first_name'],
+                            request.POST['last_name'] , request.POST['email'], request.POST['password'], current_user.id])
+            status = 'Edited profile successfully!'
+            cursor.execute("SELECT e.nric, e.dob, u.first_name, u.last_name, u.email, u.password FROM auth_user u, app_userext e WHERE u.id = %s"
+                            , [current_user.id])
+            obj = cursor.fetchone()
+            print(obj)
+
+        context["obj"] = obj
+        context["status"] = status
+
     return render(request, 'app/Nanny Profile Update.html')
 
 def nanny_availability_update(request):
