@@ -349,10 +349,10 @@ def nannyalljobview(request):
 def nanny_profile_page(request):
     current_user = request.user
     result_dict = {}
-    query = "SELECT e.nric, u.first_name, u.last_name, u.email, e.dob, u.password, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM nanny n, auth_user u, usersext e WHERE u.id = %s and e.role = 'nanny'", current_user.id
-    c = connection.cursor()
-    c.execute(query)
-    results = c.fetchall()
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob, u.password, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM app_nanny n, auth_user u, app_usersext e WHERE u.id = %s and e.role = 'nanny'"
+                        , [current_user.id] )
+        results = cursor.fetchall()
     result_dict = {'records': results}
     return render(request,'app/Nanny Profile Page.html',result_dict)
 
