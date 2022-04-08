@@ -40,6 +40,7 @@ urlpatterns = [
     path('parent_page', app.views.parent_page, name='Parent Hub'),
     path('parent_profile', app.views.parent_profile, name='Parent Profile Page'),
     path('parent_bookings', app.views.parent_bookings, name='Parent Bookings'),
+    path('view_applicants', app.views.view_applicants, name='View Applicants'),
     path('elements', app.views.elements, name='Elements'),
     path('index', app.views.index, name='Index 1'),
     path('index2', app.views.index2, name='Index 2')

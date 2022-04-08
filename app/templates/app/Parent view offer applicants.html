@@ -7,7 +7,7 @@
 -->
 <html>
 	<head>
-		<title>Make a new offer</title>
+		<title>Offers</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
@@ -17,6 +17,7 @@
 
 		<!-- Sidebar -->
 			<section id="sidebar">
+
 				<div class="inner">
 					<nav>
 						<ul>
@@ -29,55 +30,42 @@
 					</nav>
 				</div>
 			</section>
-
-		<!-- Wrapper -->
-			<div id="wrapper">
-				<section id="one" class="wrapper style1 fade-up">
-					<div class="inner">
-						<h2>Make an Offer!</h2>
-						<div >
-							<section>
-								<form method="post" action="#">
-									<div class="fields">
-										<div class="field half">
-											<label for="name">Number of Years Required</label>
-											<input type="text" name="Number of Years Required" id="Number of Years Required" />
-										</div>
-										<div class="field half">
-											<label for="Rate">Rate</label>
-											<input type="text" name="Rate" id="Rate" />
-										</div>
-										<div class="field half">
-											<label for="Start Date">Start date</label>
-											<input type="text" name="Start date" id="Start date" />
-										</div>
-										<div class="field half">
-											<label for="End date">End date</label>
-											<input type="text" name="End date" id="End date" />
-										</div>
-										<div class="field half">
-											<label for="Start time">Start time</label>
-											<input type="text" name="Start time" id="Start time" />
-										</div>
-										<div class="field half">
-											<label for="End time">End time</label>
-											<input type="text" name="End time" id="End time" />
-										</div>
-										<div class="field">
-											<label for="Job Requirement">Job Requirement</label>
-											<input type="text" name="Job Requirement" id="Job Requirement" />
-										</div>
-										
-									</div>
-									<ul class="actions">
-										<li><a href="{%url 'Offers' %}" class="button">Offer</a></li>
-									</ul>
-								</form>
-							</section>
-					
+			
+				<!-- One -->
+					<section id="three" class="wrapper style1 fade-up">
+						<div class = "inner">
+							<h2>Offer ID</h2>
+							<p> Offer details goes here</p>
+							<div id ="two" class="row">
+								<div class="col-4 col-6-medium col-12-medium">
+									<section class="box">
+										<header>
+											<h3>Nanny Name</h3>
+										</header>
+										<p>Nanny description goes here</p>
+										<footer>
+											<ul class="actions">
+												<a href="#" class="button small">Choose Nanny</a>
+											</ul>
+										</footer>
+									</section>
+								</div>
+								<div class="col-4 col-6-medium col-12-medium">
+									<section class="box">
+										<header>
+											<h3>Nanny Name</h3>
+										</header>
+										<p>Nanny description goes here</p>
+										<footer>
+											<ul class="actions">
+												<a href="#" class="button small">Choose Nanny</a>
+											</ul>
+										</footer>
+									</section>
+								</div>
+							</div>
 						</div>
-					</div>
-				</section>
+					</section>
 
 			</div>
 

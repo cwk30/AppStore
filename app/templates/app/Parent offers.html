@@ -31,66 +31,71 @@
 				</div>
 			</section>
 			
-				<!-- Three -->
+				<!-- One -->
 					<section id="three" class="wrapper style1 fade-up">
 						<br>
 						<div class="inner">
-							<a href="#two" class="button">Open Offers</a>
-							<a href="#three" class="button">Past Offers</a>
-						</div>			
-						<div class="inner">
-							<h2>Get in touch</h2>
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
-							<div class="split style1">
-								<section>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field half">
-												<label for="name">Name</label>
-												<input type="text" name="name" id="name" />
-											</div>
-											<div class="field half">
-												<label for="email">Email</label>
-												<input type="text" name="email" id="email" />
-											</div>
-											<div class="field">
-												<label for="message">Message</label>
-												<textarea name="message" id="message" rows="5"></textarea>
-											</div>
-										</div>
-										<ul class="actions">
-											<li><a href="" class="button submit">Send Message</a></li>
-										</ul>
-									</form>
-								</section>
-								<section>
-									<ul class="contact">
-										<li>
-											<h3>Address</h3>
-											<span>12345 Somewhere Road #654<br />
-											Nashville, TN 00000-0000<br />
-											USA</span>
-										</li>
-										<li>
-											<h3>Email</h3>
-											<a href="#">user@untitled.tld</a>
-										</li>
-										<li>
-											<h3>Phone</h3>
-											<span>(000) 000-0000</span>
-										</li>
-										<li>
-											<h3>Social</h3>
-											<ul class="icons">
-												<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-												<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-												<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-												<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-												<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
+							<div class ="align-center">
+								<a href="#two" class="button">Open Offers</a>
+								<a href="#three" class="button">Past Offers</a>
+								<a href="{% url 'Make an Offer' %}" class="button">Make a new offer!</a>
+							</div>
+						</div>
+
+						<div class = "inner">
+							<h2>Open Offers</h2>
+							<div id ="two" class="row">
+								<div class="col-4 col-6-medium col-12-medium">
+									<section class="box">
+										<header>
+											<h3>Job ID</h3>
+										</header>
+										<p>Job description goes here</p>
+										<footer>
+											<ul class="actions">
+												<a href="{% url 'View Applicants' %}" class="button small">Choose Nanny</a>
+												<a href="#" class="button small">Close Offer</a>
 											</ul>
-										</li>
-									</ul>
-								</section>
+										</footer>
+									</section>
+								</div>
+								<div class="col-4 col-6-medium col-12-medium">
+									<section class="box">
+										<header>
+											<h3>Job ID</h3>
+										</header>
+										<p>Job description goes here</p>
+										<footer>
+											<ul class="actions">
+												<a href="{% url 'View Applicants' %}" class="button small">Choose Nanny</a>
+												<a href="#" class="button small">Close Offer</a>
+											</ul>
+										</footer>
+									</section>
+								</div>
+							</div>
+						</div>
+						<div class = "inner">
+							<h2>Past Offers</h2>
+							<div id ="three" class="row">
+								<div class="col-4 col-6-medium col-12-medium">
+									<section class="box">
+										<header>
+											<h3>Job ID</h3>
+										</header>
+										<p>Job description goes here</p>
+			
+									</section>
+								</div>
+								<div class="col-4 col-6-medium col-12-medium">
+									<section class="box">
+										<header>
+											<h3>Job ID</h3>
+										</header>
+										<p>Job description goes here</p>
+										
+									</section>
+								</div>
 							</div>
 						</div>
 					</section>

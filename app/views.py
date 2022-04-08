@@ -27,7 +27,7 @@ def nanny_requests(request):
 def parents_browse_sitters(request):
     return render(request,'app/Parent browse sitter.html')
 def parent_make_offer(request):
-    return render(request,'app/Parents make offers.html')
+    return render(request,'app/Parent make offers.html')
 def parent_offers(request):
     return render(request,'app/Parent offers.html')
 def parent_page(request):
@@ -36,6 +36,8 @@ def parent_profile(request):
     return render(request,'app/Parent profile.html')
 def parent_bookings(request):
     return render(request,'app/Parent Bookings.html')
+def view_applicants(request):
+    return render(request,'app/Parent view offer applicants.html')
 def elements(request):
     return render(request,'app/elements.html')
 def index(request):
