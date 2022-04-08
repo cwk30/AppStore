@@ -7,7 +7,7 @@
 -->
 <html>
 	<head>
-		<title>My profile</title>
+		<title>My Parents Profile</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
@@ -30,29 +30,30 @@
 				</div>
 			</section>
 
-		<!-- Wrapper -->
-			<div id="wrapper">
-
-				<!-- Intro -->
+		
+				<!-- Three -->
 				<section id="three" class="wrapper style3 fade-up">
 					<div class="inner">
 						<br>
-						<h1>Profile</h1>
-						<div>
+						<h2>Update Profile</h2>
+						
+						
+						<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
+					
 							<section>
 								<form method="post" action="#">
 									<div class="fields">
 										<div class="field quarter">
 											<label for="first name">First Name</label>
-											<p>first name</p>
+											<input type="text" name="first name" id="first name" />
 										</div>
 										<div class="field quarter">
 											<label for="last name">First Name</label>
-											<p>last name</p>
+											<input type="text" name="last name" id="last name" />
 										</div>
 										<div class="field half">
 											<label for="email">Email</label>
-											<p>email</p>
+											<input type="text" name="email" id="email" />
 										</div>
 										<div class="field half">
 											<label for="NRIC">NRIC</label>
@@ -60,18 +61,18 @@
 										</div>
 										<div class="field half">
 											<label for="Password">Passowrd</label>
-											<p>Password</p>
+											<input type="text" name="Passowrd" id="Passowrd" />
 										</div>
 									</div>
 									<ul class="actions">
-										<li><a href="{% url 'Parent Profile Update' %}" class="button">Update Profile</a></li>
+										<li><a href="{%url 'Parent Profile Page' %}" class="button">Update</a></li>
 									</ul>
 								</form>
 							</section>
-							
-						</div>
+						
 					</div>
 				</section>
+
 			</div>
 
 		<!-- Footer -->
@@ -91,5 +92,6 @@
 			<script src="{% static 'app/main/assets/js/breakpoints.min.js' %}"></script>
 			<script src="{% static 'app/main/assets/js/util.js' %}"></script>
 			<script src="{% static 'app/main/assets/js/main.js' %}"></script>
+
 	</body>
 </html>

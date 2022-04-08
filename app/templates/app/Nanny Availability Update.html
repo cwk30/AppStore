@@ -36,79 +36,44 @@
 					<section id="three" class="wrapper style3 fade-up">
 						<div class="inner">
 							<br>
-							<h1>Profile</h1>
-							<div>
-								<section>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field quarter">
-												<label for="first name">First Name</label>
-												<p>first name</p>
-											</div>
-											<div class="field quarter">
-												<label for="last name">First Name</label>
-												<p>last name</p>
-											</div>
-											<div class="field half">
-												<label for="email">Email</label>
-												<p>email</p>
-											</div>
-											<div class="field half">
-												<label for="NRIC">NRIC</label>
-												<p>NRIC no</p>
-											</div>
-											<div class="field half">
-												<label for="Password">Passowrd</label>
-												<p>Password</p>
-											</div>
-										</div>
-										<ul class="actions">
-											<li><a href="{% url 'Nanny Profile Update' %}" class="button">Update Profile</a></li>
-										</ul>
-									</form>
-								</section>
-								
-							</div>
-							<h1>Availability and Experience</h1>
-							<div>
+							<h2>Update Availability and Experience</h2>
 								<section>
 									<form method="post" action="#">
 										<div class="fields">
 											<div class="field quarter">
 												<label for="Start Date">Start Date</label>
-												<p>Start Date</p>
+												<input type="text" name="Start Date" id="Start Date" />
 											</div>
 											<div class="field quarter">
 												<label for="End Date">End Date</label>
-												<p>End date</p>
+												<input type="text" name="End Date" id="End Date" />
 											</div>
 											<div class="field quarter">
 												<label for="Start Time">Start Time</label>
-												<p>Start Time</p>
+												<input type="text" name="Start Time" id="Start Time" />
 											</div>
 											<div class="field quarter">
 												<label for="End Time">End Time</label>
-												<p>End Time</p>
+												<input type="text" name="End Date" id="End Date" />
 											</div>
 											<div class="field half">
-												<label for="Year of Experience">Year of Experience</label>
-												<p>Year of Experience</p>
+												<label for="Number of Experience">Number of Experience</label>
+												<input type="text" name="End Date" id="End Date" />
 											</div>
 											<div class="field half">
 												<label for="Rate">Rate</label>
-												<p>Rate</p>
+												<input type="text" name="Rate" id="Rate" />
 											</div>
 										</div>
 										<ul class="actions">
-											<li><a href="{% url 'Nanny Availability Update' %}" class="button">Update Availability and Experience</a></li>
+											<li><a href="{%url 'Nanny Profile Page' %}" class="button">Update</a></li>
 										</ul>
 									</form>
 								</section>
-								
-							</div>
+							
 						</div>
 					</section>
-					
+
 			</div>
 
 		<!-- Footer -->
