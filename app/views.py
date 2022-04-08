@@ -359,6 +359,7 @@ def nanny_profile_page(request):
     result_dict['records'] = results
     return render(request,'app/Nanny Profile Page.html',result_dict)
 
+@login_required
 def nanny_profile_update(request):
     # dictionary for initial data with
     # field names as keys
@@ -390,7 +391,19 @@ def nanny_profile_update(request):
 def nanny_availability_update(request):
     return render(request, 'app/Nanny Availability Update.html')
 
+@login_required
+def parent_profile(request):
+    current_user = request.user
+    result_dict = {}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob FROM auth_user u left join app_usersext e on u.id = e.user_id where u.id = %s"
+                        , [current_user.id])
+        results = cursor.fetchone()
+    result_dict['records'] = results
+    return render(request,'app/Parent Profile.html',result_dict)
 
+def parent_profile_update(request):
+    return render(request, 'app/Parent Profile Update.html')
 
 
 
