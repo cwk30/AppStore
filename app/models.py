@@ -17,13 +17,13 @@ class jobs(models.Model):
     start_time = models.TimeField()
     end_date = models.DateField()
     end_time = models.TimeField()
+    rate = models.IntegerField()
+    experience_req = models.IntegerField()
+    job_requirement = models.TextField(('describe the job requirement'), max_length=500, blank=True)
 
 class nanny(models.Model):
     # user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    rate = models.IntegerField()
-    experience_req = models.IntegerField()
-    job_requirement = models.TextField(('describe the job requirement'), max_length=500, blank=True)
     start_date = models.DateField()
     start_time = models.TimeField()
     end_date = models.DateField()
