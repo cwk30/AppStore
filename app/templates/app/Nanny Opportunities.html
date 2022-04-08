@@ -162,11 +162,11 @@
 											<b>Daily Start time:</b> {{ item.4 }}<br>
 											<b>Daily End Time</b>: {{ item.5 }}<br>
 										</p>
-										<footer>
+									
 											<ul class="actions">
-												<a href="{% url 'Nanny view offer' %}" class="button">View</a>
+												<a href="{% url 'Nanny view offer' id=item.9 %}" class="button">View</a>
 											</ul>
-										</footer>
+										
 									</section>
 								</div>
 							{% endfor %}

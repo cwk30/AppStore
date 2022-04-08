@@ -26,8 +26,7 @@ def nanny_page(request):
     return render(request,'app/Nanny Page.html')
 def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
-def nanny_view_offer(request):
-    return render(request,'app/Nanny view offer.html')
+
 
 def nanny_profile_page(request):
     return render(request,'app/Nanny Profile Page.html')
@@ -51,6 +50,7 @@ def parent_bookings(request):
     return render(request,'app/Parent Bookings.html')
 def view_applicants(request):
     return render(request,'app/Parent view offer applicants.html')
+
 def elements(request):
     return render(request,'app/elements.html')
 # def index(request):
@@ -250,7 +250,7 @@ def nanny_opportunities(request):
             print(max_end_time.strftime("%M"))
             # print("%s %s %s %s %s %s %s %s %s %s %s",min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(min_experience_req), min_start_time.strftime("%-H"),min_start_time.strftime("%-H"),min_start_time.strftime("%-M"), max_end_time.strftime("%-H"),max_end_time.strftime("%-H"),max_end_time.strftime("%-M"))
             with connection.cursor() as cursor:
-                cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement FROM auth_user u, app_jobs j WHERE (j.user_id=u.id AND j.start_date >= %s AND j.end_date <= %s AND j.rate>=%s AND j.experience_req<=%s) AND ((date_part('hour',j.start_time) > %s) OR ((date_part('hour',j.start_time) = %s AND (date_part('minute',j.start_time) > %s)))) AND ((date_part('hour',j.end_time) < %s) OR ((date_part('hour',j.end_time) = %s AND (date_part('minute',j.end_time) < %s))))",
+                cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement, j.jobid FROM auth_user u, app_jobs j WHERE (j.user_id=u.id AND j.start_date >= %s AND j.end_date <= %s AND j.rate>=%s AND j.experience_req<=%s) AND ((date_part('hour',j.start_time) > %s) OR ((date_part('hour',j.start_time) = %s AND (date_part('minute',j.start_time) > %s)))) AND ((date_part('hour',j.end_time) < %s) OR ((date_part('hour',j.end_time) = %s AND (date_part('minute',j.end_time) < %s))))",
                 [min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(max_experience_req), min_start_time.strftime("%H"),min_start_time.strftime("%H"),min_start_time.strftime("%M"), max_end_time.strftime("%H"),max_end_time.strftime("%H"),max_end_time.strftime("%M")]) 
                 results = namedtuplefetchall(cursor)
             return render(request, 'app/Nanny Opportunities.html',{'filterjob_form': JobFilter_form, 'results': results})
@@ -258,7 +258,7 @@ def nanny_opportunities(request):
     else:
         JobFilter_form = JobFilterForm
         with connection.cursor() as cursor:
-            cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement FROM auth_user u, app_jobs j WHERE j.user_id=u.id") 
+            cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement, j.jobid FROM auth_user u, app_jobs j WHERE j.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/Nanny Opportunities.html',{'filterjob_form': JobFilter_form, 'results': results})
 
@@ -293,7 +293,7 @@ def parents_browse_sitters(request):
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
 
-def jobview(request, id):
+def nanny_view_offer(request, id):
     # dictionary for initial data with
     # field names as keys
     context ={}
@@ -324,9 +324,10 @@ def jobview(request, id):
                 status = 'You have already applied!'
     
     context['status'] = status
-    return render(request,'app/jobview.html',{'jobv': view_job, 'status': status })
+    return render(request,'app/Nanny view offer.html',{'jobv': view_job, 'status': status })
 
-def nannyview(request, id):
+def parent_view_sitter(request):
+
     # dictionary for initial data with
     # field names as keys
     context ={}
@@ -350,12 +351,12 @@ def nannyview(request, id):
             if curr_nannyid == None:
                 cursor.execute("INSERT INTO app_request (tositter_id, fromparent_id, status) VALUES (%s, %s, 'pending')", [str(nannyv_dict["nannyv"][8]),str(current_user.id)])
                 status = 'Requested successfully!'
-                return redirect('/parentsbrowsenannies')
+                return redirect('/parent_browse_sitters')
             else:
                 status = 'You have already requested!'
     
     context['status'] = status
-    return render(request,'app/nannyview.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
+    return render(request,'app/Parent view sitter.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
 
 
 # def index(request):
