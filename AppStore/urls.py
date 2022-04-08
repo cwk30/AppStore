@@ -47,6 +47,9 @@ urlpatterns = [
     path('parentcreatejob', app.views.parentcreatejob, name='parentcreatejob'),
     path('nannyscheduleadd', app.views.nannyscheduleadd, name='nannyscheduleadd'),
     path('nannyscheduleview', app.views.nannyscheduleview, name='nannyscheduleview'),
+    path('nannybrowsejobs', app.views.nannybrowsejobs, name='nannybrowsejobs'),
+    path('parentsbrowsenannies', app.views.parentsbrowsenannies, name='parentsbrowsenannies'),
+    
     path('nannyedit', app.views.nannyedit, name='nannyedit')
 
 ]

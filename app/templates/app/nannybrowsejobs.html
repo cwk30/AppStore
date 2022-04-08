@@ -90,17 +90,17 @@
                 </div>
 
                 <div class="field half">
-                    {{ filterjob_form.min_experience_req.label }}
+                    {{ filterjob_form.max_experience_req.label }}
 
-                    {% if filterjob_form.min_experience_req.errors %}  
-                        {{ filterjob_form.min_experience_req}}
+                    {% if filterjob_form.max_experience_req.errors %}  
+                        {{ filterjob_form.max_experience_req}}
                         <div class="invalid-feedback">
-                            {% for error in filterjob_form.min_experience_req.errors %}
+                            {% for error in filterjob_form.max_experience_req.errors %}
                                 <span>{{ error }}</span> 
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ filterjob_form.min_experience_req }}
+                        {{ filterjob_form.max_experience_req }}
                     {% endif %}
                 </div>
 

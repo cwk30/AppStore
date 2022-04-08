@@ -1,26 +1,131 @@
 <html>
 <body>
-    <h2>Edit {{obj.5}}</h2>
+    <h2>Nanny Profile Availability Edit</h2>
     <a href="/">Back to home</a>
-
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
     <p style="color:red">{{ status|safe }}</p>
+    <!-- Availability  -->
+    <article id="enter_availability">
+        <h2 class="major"> Edit your details and availability </h2>
+        <form method="POST" action="">
+            {% csrf_token  %}
+            <div class="fields">
+                <div class="field half">
+                    {{ nannyavail_form.start_date.label }}
 
-    <!-- Create a Form -->
-    <form method="POST">
-        <!-- Security token by Django -->
-        {% csrf_token %}
-        <!-- form -->
-        <div id="div_id_start_date" class="control-group"> <label for="id_start_date" class="control-label requiredField">
-        Start Date (yyyy-mm-dd)<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="start_date" value="{{obj.0}}" class="dateinput" required="" id="id_start_date"> </div> </div> <div id="div_id_end_date" class="control-group"> <label for="id_end_date" class="control-label requiredField">
-        End Date (yyyy-mm-dd)<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="end_date" value="{{obj.1}}" class="dateinput" required="" id="id_end_date"> </div> </div> <div id="div_id_start_time" class="control-group"> <label for="id_start_time" class="control-label requiredField">
-        Start Time (HH:MM)<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="start_time" value="{{obj.2}}" maxlength="5" class="textinput textInput" required="" id="id_start_time"> </div> </div> <div id="div_id_end_time" class="control-group"> <label for="id_end_time" class="control-label requiredField">
-        End Time (HH:MM)<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="end_time" value="{{obj.3}}" maxlength="5" class="textinput textInput" required="" id="id_end_time"> </div> </div> <div id="div_id_rate" class="control-group"> <label for="id_rate" class="control-label requiredField">
-        Rate (per hour)<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="rate" value="{{obj.4}}" maxlength="5" class="textinput textInput" required="" id="id_rate"> </div> </div> <div id="div_id_experience" class="control-group"> <label for="id_experience" class="control-label requiredField">
-        Experience (year)<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="experience" value="{{obj.6}}" maxlength="3" class="textinput textInput" required="" id="id_experience"> </div> </div> <div id="div_id_about_me" class="control-group"> <label for="id_about_me" class="control-label requiredField">
-        About Me <span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="experience" value="{{obj.7}}" maxlength="500" class="textinput textInput" required="" id="id_about_me"> </div> </div> 
-        <br>
-        <button type="submit" value="Update">Update</button>
-    </form>
+                    {% if nannyavail_form.start_date.errors %}  
+                        {{ nannyavail_form.start_date}}
+                        <div class="invalid-feedback">
+                            {% for error in nannyavail_form.start_date.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ nannyavail_form.start_date }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ nannyavail_form.start_time.label }}
+
+                    {% if nannyavail_form.start_time.errors %}  
+                        {{ nannyavail_form.start_time}}
+                        <div class="invalid-feedback">
+                            {% for error in nannyavail_form.start_time.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ nannyavail_form.start_time }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ nannyavail_form.end_date.label }}
+
+                    {% if nannyavail_form.end_date.errors %}  
+                        {{ nannyavail_form.end_date}}
+                        <div class="invalid-feedback">
+                            {% for error in nannyavail_form.end_date.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ nannyavail_form.end_date }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ nannyavail_form.end_time.label }}
+
+                    {% if nannyavail_form.end_time.errors %}  
+                        {{ nannyavail_form.end_time}}
+                        <div class="invalid-feedback">
+                            {% for error in nannyavail_form.end_time.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ nannyavail_form.end_time }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ nannyavail_form.rate.label }}
+
+                    {% if nannyavail_form.rate.errors %}  
+                        {{ nannyavail_form.rate}}
+                        <div class="invalid-feedback">
+                            {% for error in nannyavail_form.rate.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ nannyavail_form.rate }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ nannyavail_form.experience.label }}
+
+                    {% if nannyavail_form.experience.errors %}  
+                        {{ nannyavail_form.experience_req}}
+                        <div class="invalid-feedback">
+                            {% for error in nannyavail_form.experience.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ nannyavail_form.experience }}
+                    {% endif %}
+                </div>
+
+                <div class="field half">
+                    {{ nannyavail_form.about_me.label }}
+
+                    {% if nannyavail_form.about_me.errors %}  
+                        {{ nannyavail_form.about_me}}
+                        <div class="invalid-feedback">
+                            {% for error in nannyavail_form.about_me.errors %}
+                                <span>{{ error }}</span> 
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ nannyavail_form.about_me }}
+                    {% endif %}
+                </div>
+      
+            </div>
+            <ul class="actions">
+                <li><input type="submit" value=Submit></li>
+            </ul>
+
+        </form>
+    </article>
 </body>
 </html>
 

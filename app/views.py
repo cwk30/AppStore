@@ -49,8 +49,8 @@ def view_applicants(request):
     return render(request,'app/Parent view offer applicants.html')
 def elements(request):
     return render(request,'app/elements.html')
-def index(request):
-    return render(request,'app/index.html')
+# def index(request):
+#     return render(request,'app/index.html')
 def index2(request):
     return render(request,'app/index 2.html')
 def parents_profile_update(request):
@@ -163,32 +163,48 @@ def nannyscheduleview(request):
 
 @login_required
 def nannyedit(request):
+    if request.method == 'POST':
+        # Create a form instance and populate it with data from the request (binding):
+        nannyavail_form = NannyAvailableForm(request.POST)
+        # Check if the form is valid:
+        if nannyavail_form.is_valid():
+            # print("%s %s %s %s %s %s %s %s %s %s %s",min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(min_experience_req), min_start_time.strftime("%-H"),min_start_time.strftime("%-H"),min_start_time.strftime("%-M"), max_end_time.strftime("%-H"),max_end_time.strftime("%-H"),max_end_time.strftime("%-M"))
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
+                        , [nannyavail_form.cleaned_data['start_date'], nannyavail_form.cleaned_data['end_date'], nannyavail_form.cleaned_data['start_time'],
+                            nannyavail_form.cleaned_data['end_time'] , nannyavail_form.cleaned_data['rate'], nannyavail_form.cleaned_data['experience'], nannyavail_form.cleaned_data['about_me']])
+            return redirect('/nannyscheduleview')
+    # If this is a GET (or any other method) create the default form.
+    else:
+        nannyavail_form = NannyAvailableForm
+    
+    return render(request, 'app/nannyedit.html',{'nannyavail_form': nannyavail_form})
+    # # dictionary for initial data with
+    # # field names as keys
+    # context ={}
 
-    # dictionary for initial data with
-    # field names as keys
-    context ={}
+    # # fetch the object related to passed id
+    # with connection.cursor() as cursor:
+    #     cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
+    #     obj = cursor.fetchone()
 
-    # fetch the object related to passed id
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
-        obj = cursor.fetchone()
+    # status = ''
+    # # save the data from the form
+    # if request.POST:
+    #     print(request.POST)
+    #     with connection.cursor() as cursor:
+    #         cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
+    #                     , [request.POST['start_date'], request.POST['end_date'], request.POST['start_time'],
+    #                         request.POST['end_time'] , request.POST['rate'], request.POST['experience'], request.POST['about_me']])
+    #         status = 'Customer edited successfully!'
+    #         cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
+    #         obj = cursor.fetchone()
+    #         print(obj)
 
-    status = ''
-    # save the data from the form
-    if request.POST:
-        with connection.cursor() as cursor:
-            cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id"
-                        , [request.POST['start_date'], request.POST['end_date'], request.POST['start_time'],
-                            request.POST['end_time'] , request.POST['rate'], request.POST['experience'], request.POST['about_me']])
-            status = 'Customer edited successfully!'
-            cursor.execute("SELECT * FROM auth_user u, app_nanny n WHERE n.user_id = u.id")
-            obj = cursor.fetchone()
-            print(obj)
-
-        context["obj"] = obj
-        context["status"] = status
+    #     context["obj"] = obj
+    #     context["status"] = status
  
-    return render(request, "app/nannyedit.html", context)
+    # return render(request, "app/nannyedit.html", context)
 
 @login_required
 def nannyscheduleadd(request):
@@ -223,7 +239,7 @@ def nannyscheduleadd(request):
 
 #-----------------------------------------------------------------------------------------------------------------------------------------#
 @login_required
-def nannybrowsejob(request):
+def nannybrowsejobs(request):
     if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
         JobFilter_form = JobFilterForm(request.POST)
@@ -286,7 +302,7 @@ def parentsbrowsenannies(request):
             max_rate=NannyFilter_form.cleaned_data['max_rate']
             min_experience_req=NannyFilter_form.cleaned_data['min_experience_req']
             with connection.cursor() as cursor:
-                cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE (n.user=u.id AND n.start_date <= %s AND n.end_date >= %s AND n.rate<=%s AND n.experience>=%s) AND ((date_part('hour',n.start_time) < %s) OR ((date_part('hour',n.start_time) = %s AND (date_part('minute',n.start_time) < %s)))) AND ((date_part('hour',n.end_time) > %s) OR ((date_part('hour',n.end_time) = %s AND (date_part('minute',n.end_time) > %s))))",
+                cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE (n.user_id=u.id AND n.start_date <= %s AND n.end_date >= %s AND n.rate<=%s AND n.experience>=%s) AND ((date_part('hour',n.start_time) < %s) OR ((date_part('hour',n.start_time) = %s AND (date_part('minute',n.start_time) < %s)))) AND ((date_part('hour',n.end_time) > %s) OR ((date_part('hour',n.end_time) = %s AND (date_part('minute',n.end_time) > %s))))",
                 [max_start_date.strftime("%Y-%m-%d"), min_end_date.strftime("%Y-%m-%d"), str(max_rate), str(min_experience_req), max_start_time.strftime("%H"),max_start_time.strftime("%H"),max_start_time.strftime("%M"), min_end_time.strftime("%H"),min_end_time.strftime("%H"),min_end_time.strftime("%M")]) 
                 results = namedtuplefetchall(cursor)
             return render(request, 'app/parentsbrowsenannies.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
@@ -298,23 +314,23 @@ def parentsbrowsenannies(request):
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/parentsbrowsenannies.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
 
-def index(request):
-    """Shows the main page""" 
+# def index(request):
+#     """Shows the main page""" 
 
-    ## Delete customer
-    if request.POST:
-        if request.POST['action'] == 'delete':
-            with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM customers WHERE customerid = %s", [request.POST['id']])
+#     ## Delete customer
+#     if request.POST:
+#         if request.POST['action'] == 'delete':
+#             with connection.cursor() as cursor:
+#                 cursor.execute("DELETE FROM customers WHERE customerid = %s", [request.POST['id']])
 
-    ## Use raw query to get all objects
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM customers ORDER BY customerid")
-        customers = cursor.fetchall()
+#     ## Use raw query to get all objects
+#     with connection.cursor() as cursor:
+#         cursor.execute("SELECT * FROM customers ORDER BY customerid")
+#         customers = cursor.fetchall()
 
-    result_dict = {'records': customers}
+#     result_dict = {'records': customers}
 
-    return render(request,'app/index.html',result_dict)
+#     return render(request,'app/index.html',result_dict)
 
 # Create your views here.
 def view(request, id):

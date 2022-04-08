@@ -15,92 +15,92 @@
             {% csrf_token  %}
             <div class="fields">
                 <div class="field half">
-                    {{ NannyFilter_form.min_start_date.label }}
+                    {{ NannyFilter_form.max_start_date.label }}
 
-                    {% if filterjob_form.min_start_date.errors %}  
-                        {{ filterjob_form.min_start_date}}
+                    {% if NannyFilter_form.max_start_date.errors %}  
+                        {{ NannyFilter_form.max_start_date}}
                         <div class="invalid-feedback">
-                            {% for error in filterjob_form.min_start_date.errors %}
+                            {% for error in NannyFilter_form.max_start_date.errors %}
                                 <span>{{ error }}</span> 
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ filterjob_form.min_start_date }}
+                        {{ NannyFilter_form.max_start_date }}
                     {% endif %}
                 </div>
 
                 <div class="field half">
-                    {{ filterjob_form.min_start_time.label }}
+                    {{ NannyFilter_form.max_start_time.label }}
 
-                    {% if filterjob_form.min_start_time.errors %}  
-                        {{ filterjob_form.min_start_time}}
+                    {% if NannyFilter_form.max_start_time.errors %}  
+                        {{ NannyFilter_form.max_start_time}}
                         <div class="invalid-feedback">
-                            {% for error in filterjob_form.min_start_time.errors %}
+                            {% for error in NannyFilter_form.max_start_time.errors %}
                                 <span>{{ error }}</span> 
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ filterjob_form.min_start_time }}
+                        {{ NannyFilter_form.max_start_time }}
                     {% endif %}
                 </div>
 
                 <div class="field half">
-                    {{ filterjob_form.max_end_date.label }}
+                    {{ NannyFilter_form.min_end_date.label }}
 
-                    {% if filterjob_form.max_end_date.errors %}  
-                        {{ filterjob_form.max_end_date}}
+                    {% if NannyFilter_form.min_end_date.errors %}  
+                        {{ NannyFilter_form.min_end_date}}
                         <div class="invalid-feedback">
-                            {% for error in filterjob_form.max_end_date.errors %}
+                            {% for error in NannyFilter_form.min_end_date.errors %}
                                 <span>{{ error }}</span> 
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ filterjob_form.max_end_date }}
+                        {{ NannyFilter_form.min_end_date }}
                     {% endif %}
                 </div>
 
                 <div class="field half">
-                    {{ filterjob_form.max_end_time.label }}
+                    {{ NannyFilter_form.min_end_time.label }}
 
-                    {% if filterjob_form.max_end_time.errors %}  
-                        {{ filterjob_form.max_end_time}}
+                    {% if NannyFilter_form.min_end_time.errors %}  
+                        {{ NannyFilter_form.min_end_time}}
                         <div class="invalid-feedback">
-                            {% for error in filterjob_form.max_end_time.errors %}
+                            {% for error in NannyFilter_form.min_end_time.errors %}
                                 <span>{{ error }}</span> 
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ filterjob_form.max_end_time }}
+                        {{ NannyFilter_form.min_end_time }}
                     {% endif %}
                 </div>
 
                 <div class="field half">
-                    {{ filterjob_form.min_rate.label }}
+                    {{ NannyFilter_form.max_rate.label }}
 
-                    {% if filterjob_form.min_rate.errors %}  
-                        {{ filterjob_form.min_rate}}
+                    {% if NannyFilter_form.max_rate.errors %}  
+                        {{ NannyFilter_form.max_rate}}
                         <div class="invalid-feedback">
-                            {% for error in filterjob_form.min_rate.errors %}
+                            {% for error in NannyFilter_form.max_rate.errors %}
                                 <span>{{ error }}</span> 
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ filterjob_form.min_rate }}
+                        {{ NannyFilter_form.max_rate }}
                     {% endif %}
                 </div>
 
                 <div class="field half">
-                    {{ filterjob_form.min_experience_req.label }}
+                    {{ NannyFilter_form.min_experience_req.label }}
 
-                    {% if filterjob_form.min_experience_req.errors %}  
-                        {{ filterjob_form.min_experience_req}}
+                    {% if NannyFilter_form.min_experience_req.errors %}  
+                        {{ NannyFilter_form.min_experience_req}}
                         <div class="invalid-feedback">
-                            {% for error in filterjob_form.min_experience_req.errors %}
+                            {% for error in NannyFilter_form.min_experience_req.errors %}
                                 <span>{{ error }}</span> 
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ filterjob_form.min_experience_req }}
+                        {{ NannyFilter_form.min_experience_req }}
                     {% endif %}
                 </div>
 
@@ -110,7 +110,7 @@
                 <li><input type="submit" value=Submit></li>
             </ul>
             {% for item in results %}    
-                {{ item.0 }} {{ item.1}} {{ item.2 }} {{ item.3 }} {{ item.4 }} {{ item.5 }} {{ item.6 }} {{ item.7 }} {{ item.8 }} {{ item.9 }}     
+                {{ item.0 }} {{ item.1}} {{ item.2 }} {{ item.3 }} {{ item.4 }} {{ item.5 }} {{ item.6 }} {{ item.7 }} {{ item.8 }}     
             {% endfor %}
         </form>
     </article>
