@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE HTML>
 <!--
 	Hyperspace by HTML5 UP
@@ -9,8 +10,8 @@
 		<title>Bookings</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'app/main/assets/css/noscript.css' %}" /></noscript>
 	</head>
 	<body class="is-preload">
 
@@ -19,11 +20,11 @@
 				<div class="inner">
 					<nav>
 						<ul>
-							<li><a href="Parent page.html">Dash Board</a></li>
-							<li><a href="Parents Bookings.html">Bookings</a></li>
-							<li><a href="Parent offers.html">Offers</a></li>
-							<li><a href="Parent browse sitter.html">Browse Sitters</a></li>
-							<li><a href="Parent profile.html">Profile</a></li>
+							<li><a href="{%url 'Parent Hub'%}">Parent Hub</a></li>
+							<li><a href="{%url 'Parent Bookings'%}">Bookings</a></li>
+							<li><a href="{%url 'Offers'%}">Offers</a></li>
+							<li><a href="{%url 'Browse Sitters'%}">Browse Sitters</a></li>
+							<li><a href="{%url 'Parent Profile Page'%}">Profile</a></li>
 						</ul>
 					</nav>
 				</div>
@@ -198,13 +199,13 @@
 			</footer>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+			<script src="{% static 'app/main/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/jquery.scrolly.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/browser.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/util.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/main.js' %}"></script>
 
 	</body>
 </html>
