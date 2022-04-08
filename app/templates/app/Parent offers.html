@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE HTML>
 <!--
 	Hyperspace by HTML5 UP
@@ -9,28 +10,34 @@
 		<title>Offers</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'app/main/assets/css/noscript.css' %}" /></noscript>
 	</head>
 	<body class="is-preload">
 
 		<!-- Sidebar -->
 			<section id="sidebar">
+
 				<div class="inner">
 					<nav>
 						<ul>
-							<li><a href="Parent page.html">Dash Board</a></li>
-							<li><a href="Parents Bookings.html">Bookings</a></li>
-							<li><a href="Parent offers.html">Offers</a></li>
-							<li><a href="Parent browse sitter.html">Browse Sitters</a></li>
-							<li><a href="Parent profile.html">Profile</a></li>
+							<li><a href="{%url 'Parent Hub'%}">Parent Hub</a></li>
+							<li><a href="{%url 'Parent Bookings'%}">Bookings</a></li>
+							<li><a href="{%url 'Offers'%}">Offers</a></li>
+							<li><a href="{%url 'Browse Sitters'%}">Browse Sitters</a></li>
+							<li><a href="{%url 'Parent Profile Page'%}">Profile</a></li>
 						</ul>
 					</nav>
 				</div>
 			</section>
-
+			
 				<!-- Three -->
 					<section id="three" class="wrapper style1 fade-up">
+						<br>
+						<div class="inner">
+							<a href="#two" class="button">Open Offers</a>
+							<a href="#three" class="button">Past Offers</a>
+						</div>			
 						<div class="inner">
 							<h2>Get in touch</h2>
 							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
@@ -100,13 +107,13 @@
 			</footer>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+			<script src="{% static 'app/main/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/jquery.scrolly.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/browser.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/util.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/main.js' %}"></script>
 
 	</body>
 </html>
