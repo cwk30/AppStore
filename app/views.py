@@ -26,6 +26,8 @@ def nanny_page(request):
     return render(request,'app/Nanny Page.html')
 def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
+def nanny_view_offer(request):
+    return render(request,'app/Nanny view offer.html')
 
 def nanny_profile_page(request):
     return render(request,'app/Nanny Profile Page.html')
