@@ -345,6 +345,7 @@ def nannyalljobview(request):
     result_dict['record']=results
     return render(request, "app/nannyalljobview.html", result_dict)
 
+
 @login_required
 def nanny_profile_page(request):
     current_user = request.user
@@ -356,8 +357,11 @@ def nanny_profile_page(request):
     result_dict = {'records': results}
     return render(request,'app/Nanny Profile Page.html',result_dict)
 
+def nanny_profile_update(request):
+    return render(request, 'app/Nanny Profile Update.html')
 
-
+def nanny_availability_update(request):
+    return render(request, 'app/Nanny Availability Update.html')
 
 
 
