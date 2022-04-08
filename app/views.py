@@ -26,8 +26,7 @@ def nanny_page(request):
     return render(request,'app/Nanny Page.html')
 def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
-def nanny_opportunities(request):
-    return render(request,'app/Nanny Opportunities.html')
+
 def nanny_profile_page(request):
     return render(request,'app/Nanny Profile Page.html')
 def nanny_profile_update(request):
@@ -37,10 +36,6 @@ def nanny_availability_update(request):
 def nanny_requests(request):
     return render(request,'app/Nanny Requests.html')
 
-def parents_browse_sitters(request):
-    return render(request,'app/Parent browse sitter.html')
-def parent_make_offer(request):
-    return render(request,'app/Parent make offers.html')
 def parent_offers(request):
     return render(request,'app/Parent offers.html')
 def parent_page(request):
@@ -128,16 +123,17 @@ def nannyloginregister(request):
     return render(request, 'app/nannyloginregister.html',{'userregister_form': userregister_form, 'userlogin_form':userlogin_form})
 
 @login_required
-def parentcreatejob(request):
+def parent_make_offer(request):
     if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
         createjob_form = JobCreationForm(request.POST)
         # Check if the form is valid:
+        print(request.POST)
         if createjob_form.is_valid():
             # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
             current_user = request.user
             print(current_user.id)        
-            new_job = jobs(user=current_user, 
+            new_job = jobs(user_id=current_user.id, 
                         start_date=createjob_form.cleaned_data['start_date'], 
                         start_time=createjob_form.cleaned_data['start_time'],
                         end_date=createjob_form.cleaned_data['end_date'],
@@ -147,12 +143,12 @@ def parentcreatejob(request):
                         job_requirement=createjob_form.cleaned_data['job_requirement'])
             new_job.save()
             messages.info(request, 'Your job creation is successful! Eligible nannies can now see the job you created')
-            return redirect('/parentcreatejob')
+            return redirect('/parent_offers')
     # If this is a GET (or any other method) create the default form.
     else:
         createjob_form = JobCreationForm
         
-    return render(request, 'app/parentcreatejob.html',{'createjob_form': createjob_form})
+    return render(request, 'app/Parent make offers.html',{'createjob_form': createjob_form})
 
 
 
@@ -220,7 +216,7 @@ def nannyscheduleadd(request):
 
 #-----------------------------------------------------------------------------------------------------------------------------------------#
 @login_required
-def nannybrowsejobs(request):
+def nanny_opportunities(request):
     if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
         JobFilter_form = JobFilterForm(request.POST)
@@ -255,17 +251,17 @@ def nannybrowsejobs(request):
                 cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement FROM auth_user u, app_jobs j WHERE (j.user_id=u.id AND j.start_date >= %s AND j.end_date <= %s AND j.rate>=%s AND j.experience_req<=%s) AND ((date_part('hour',j.start_time) > %s) OR ((date_part('hour',j.start_time) = %s AND (date_part('minute',j.start_time) > %s)))) AND ((date_part('hour',j.end_time) < %s) OR ((date_part('hour',j.end_time) = %s AND (date_part('minute',j.end_time) < %s))))",
                 [min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(max_experience_req), min_start_time.strftime("%H"),min_start_time.strftime("%H"),min_start_time.strftime("%M"), max_end_time.strftime("%H"),max_end_time.strftime("%H"),max_end_time.strftime("%M")]) 
                 results = namedtuplefetchall(cursor)
-            return render(request, 'app/nannybrowsejobs.html',{'filterjob_form': JobFilter_form, 'results': results})
+            return render(request, 'app/Nanny Opportunities.html',{'filterjob_form': JobFilter_form, 'results': results})
     # If this is a GET (or any other method) create the default form.
     else:
         JobFilter_form = JobFilterForm
         with connection.cursor() as cursor:
             cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement FROM auth_user u, app_jobs j WHERE j.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
-    return render(request, 'app/nannybrowsejobs.html',{'filterjob_form': JobFilter_form, 'results': results})
+    return render(request, 'app/Nanny Opportunities.html',{'filterjob_form': JobFilter_form, 'results': results})
 
 @login_required
-def parentsbrowsenannies(request):
+def parents_browse_sitters(request):
     if request.method == 'POST':
         # Create a form instance and populate it with data from the request (binding):
         NannyFilter_form = NannyFilterForm(request.POST)
@@ -286,14 +282,14 @@ def parentsbrowsenannies(request):
                 cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE (n.user_id=u.id AND n.start_date <= %s AND n.end_date >= %s AND n.rate<=%s AND n.experience>=%s) AND ((date_part('hour',n.start_time) < %s) OR ((date_part('hour',n.start_time) = %s AND (date_part('minute',n.start_time) < %s)))) AND ((date_part('hour',n.end_time) > %s) OR ((date_part('hour',n.end_time) = %s AND (date_part('minute',n.end_time) > %s))))",
                 [max_start_date.strftime("%Y-%m-%d"), min_end_date.strftime("%Y-%m-%d"), str(max_rate), str(min_experience_req), max_start_time.strftime("%H"),max_start_time.strftime("%H"),max_start_time.strftime("%M"), min_end_time.strftime("%H"),min_end_time.strftime("%H"),min_end_time.strftime("%M")]) 
                 results = namedtuplefetchall(cursor)
-            return render(request, 'app/parentsbrowsenannies.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
+            return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
     # If this is a GET (or any other method) create the default form.
     else:
         NannyFilter_form = NannyFilterForm
         with connection.cursor() as cursor:
             cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
-    return render(request, 'app/parentsbrowsenannies.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
+    return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
 
 def jobview(request, id):
     # dictionary for initial data with

@@ -40,37 +40,104 @@
 							<h2>Find Opportunities</h2>
 							<div >
 								<section>
-									<form method="post" action="#">
+									<form method="POST" action="">
+										{% csrf_token  %}
 										<div class="fields">
 											<div class="field half">
-												<label for="name">Number of Years Required</label>
-												<input type="text" name="name" id="name" />
+												{{ filterjob_form.min_start_date.label }}
+							
+												{% if filterjob_form.min_start_date.errors %}  
+													{{ filterjob_form.min_start_date}}
+													<div class="invalid-feedback">
+														{% for error in filterjob_form.min_start_date.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ filterjob_form.min_start_date }}
+												{% endif %}
 											</div>
 											<div class="field half">
-												<label for="email">Rate</label>
-												<input type="text" name="email" id="email" />
+												{{ filterjob_form.max_end_date.label }}
+							
+												{% if filterjob_form.max_end_date.errors %}  
+													{{ filterjob_form.max_end_date}}
+													<div class="invalid-feedback">
+														{% for error in filterjob_form.max_end_date.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ filterjob_form.max_end_date }}
+												{% endif %}
 											</div>
+							
 											<div class="field half">
-												<label for="email">Start date</label>
-												<input type="text" name="email" id="email" />
+												{{ filterjob_form.min_start_time.label }}
+							
+												{% if filterjob_form.min_start_time.errors %}  
+													{{ filterjob_form.min_start_time}}
+													<div class="invalid-feedback">
+														{% for error in filterjob_form.min_start_time.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ filterjob_form.min_start_time }}
+												{% endif %}
 											</div>
+							
 											<div class="field half">
-												<label for="email">End date</label>
-												<input type="text" name="email" id="email" />
+												{{ filterjob_form.max_end_time.label }}
+							
+												{% if filterjob_form.max_end_time.errors %}  
+													{{ filterjob_form.max_end_time}}
+													<div class="invalid-feedback">
+														{% for error in filterjob_form.max_end_time.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ filterjob_form.max_end_time }}
+												{% endif %}
 											</div>
+							
 											<div class="field half">
-												<label for="email">Start time</label>
-												<input type="text" name="email" id="email" />
+												{{ filterjob_form.min_rate.label }}
+							
+												{% if filterjob_form.min_rate.errors %}  
+													{{ filterjob_form.min_rate}}
+													<div class="invalid-feedback">
+														{% for error in filterjob_form.min_rate.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ filterjob_form.min_rate }}
+												{% endif %}
 											</div>
+							
 											<div class="field half">
-												<label for="email">End time</label>
-												<input type="text" name="email" id="email" />
+												{{ filterjob_form.max_experience_req.label }}
+							
+												{% if filterjob_form.max_experience_req.errors %}  
+													{{ filterjob_form.max_experience_req}}
+													<div class="invalid-feedback">
+														{% for error in filterjob_form.max_experience_req.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ filterjob_form.max_experience_req }}
+												{% endif %}
 											</div>
-											
+							
+								  
 										</div>
 										<ul class="actions">
-											<li><a href="#two" class="button">Filter</a></li>
+											<li><input type="submit" value=Filter></li>
 										</ul>
+										
 									</form>
 								</section>
 						
@@ -78,49 +145,38 @@
 						</div>
 					</section>
 				<!---two--->
-				<br>
-				<div id ="two" class="row">
-					<div class="col-4 col-6-medium col-12-small">
-						<section class="box">
-							<header>
-								<h3>Job ID</h3>
-							</header>
-							<p>Job description goes here</p>
-							<footer>
-								<ul class="actions">
-									<li><a href="#" class="button alt">Apply</a></li>
-								</ul>
-							</footer>
-						</section>
-					</div>
-					<div class="col-4 col-6-medium col-12-small">
-						<section class="box">
-							<header>
-								<h3>Job ID</h3>
-							</header>
-							<p>Job description goes here</p>
-							<footer>
-								<ul class="actions">
-									<li><a href="#" class="button alt">Apply</a></li>
-								</ul>
-							</footer>
-						</section>
-					</div>
-					<div class="col-4 col-6-medium col-12-small">
-						<section class="box">
-							<header>
-								<h3>Job ID</h3>
-							</header>
-							<p>Job description goes here</p>
-							<footer>
-								<ul class="actions">
-									<li><a href="#" class="button alt">Apply</a></li>
-								</ul>
-							</footer>
-						</section>
-					</div>
+				<section class="wrapper">
+					<div class="inner">
 
-			</div>
+						<div id ="two" class="row">
+							{% for item in results %}        							
+								<div class="col-4 col-6-medium col-12-small">
+									<section class="box">
+										<header>
+											<h3>{{ item.0 }} {{ item.1}}</h3>
+										</header>
+										<p>
+											<b>Rate:</b> {{ item.6 }}<br>
+											<b>Start Date:</b> {{ item.2 }}<br>
+											<b>End Date:</b> {{ item.3 }}<br>
+											<b>Daily Start time:</b> {{ item.4 }}<br>
+											<b>Daily End Time</b>: {{ item.5 }}<br>
+										</p>
+										<footer>
+											<ul class="actions">
+												<li><input type="submit" value=View></li>
+											</ul>
+										</footer>
+									</section>
+								</div>
+							{% endfor %}
+							
+						
+		
+					</div>
+					</div>
+				</section>
+				
 
 		<!-- Footer -->
 			<footer id="footer" class="wrapper style1-alt">

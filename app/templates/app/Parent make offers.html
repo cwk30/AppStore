@@ -38,39 +38,116 @@
 						<div >
 							<section>
 								<form method="post" action="#">
+									{% csrf_token  %}
 									<div class="fields">
 										<div class="field half">
-											<label for="name">Number of Years Required</label>
-											<input type="text" name="Number of Years Required" id="Number of Years Required" />
+											{{ createjob_form.start_date.label }}
+						
+											{% if createjob_form.start_date.errors %}  
+												{{ createjob_form.start_date}}
+												<div class="invalid-feedback">
+													{% for error in createjob_form.start_date.errors %}
+														<span>{{ error }}</span> 
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ createjob_form.start_date }}
+											{% endif %}
 										</div>
 										<div class="field half">
-											<label for="Rate">Rate</label>
-											<input type="text" name="Rate" id="Rate" />
+											{{ createjob_form.end_date.label }}
+						
+											{% if createjob_form.end_date.errors %}  
+												{{ createjob_form.end_date}}
+												<div class="invalid-feedback">
+													{% for error in createjob_form.end_date.errors %}
+														<span>{{ error }}</span> 
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ createjob_form.end_date }}
+											{% endif %}
 										</div>
+						
 										<div class="field half">
-											<label for="Start Date">Start date</label>
-											<input type="text" name="Start date" id="Start date" />
+											{{ createjob_form.start_time.label }}
+											<p>Please state timing in 00:00 to 23:59</p>
+						
+											{% if createjob_form.start_time.errors %}  
+												{{ createjob_form.start_time}}
+												<div class="invalid-feedback">
+													{% for error in createjob_form.start_time.errors %}
+														<span>{{ error }}</span> 
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ createjob_form.start_time }}
+											{% endif %}
 										</div>
+						
 										<div class="field half">
-											<label for="End date">End date</label>
-											<input type="text" name="End date" id="End date" />
+											{{ createjob_form.end_time.label }}
+											<p>Please state timing in 00:00 to 23:59</p>
+											{% if createjob_form.end_time.errors %}  
+												{{ createjob_form.end_time}}
+												<div class="invalid-feedback">
+													{% for error in createjob_form.end_time.errors %}
+														<span>{{ error }}</span> 
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ createjob_form.end_time }}
+											{% endif %}
 										</div>
+						
 										<div class="field half">
-											<label for="Start time">Start time</label>
-											<input type="text" name="Start time" id="Start time" />
+											{{ createjob_form.rate.label }}
+						
+											{% if createjob_form.rate.errors %}  
+												{{ createjob_form.rate}}
+												<div class="invalid-feedback">
+													{% for error in createjob_form.rate.errors %}
+														<span>{{ error }}</span> 
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ createjob_form.rate }}
+											{% endif %}
 										</div>
+						
 										<div class="field half">
-											<label for="End time">End time</label>
-											<input type="text" name="End time" id="End time" />
+											{{ createjob_form.experience_req.label }}
+						
+											{% if createjob_form.experience_req.errors %}  
+												{{ createjob_form.experience_req}}
+												<div class="invalid-feedback">
+													{% for error in createjob_form.experience_req.errors %}
+														<span>{{ error }}</span> 
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ createjob_form.experience_req }}
+											{% endif %}
 										</div>
+						
 										<div class="field">
-											<label for="Job Requirement">Job Requirement</label>
-											<input type="text" name="Job Requirement" id="Job Requirement" />
+											{{ createjob_form.job_requirement.label }}
+						
+											{% if createjob_form.job_requirement.errors %}  
+												{{ createjob_form.job_requirement}}
+												<div class="invalid-feedback">
+													{% for error in createjob_form.job_requirement.errors %}
+														<span>{{ error }}</span> 
+													{% endfor %}
+												</div>
+											{% else %}
+												{{ createjob_form.job_requirement }}
+											{% endif %}
 										</div>
-										
+							  
 									</div>
 									<ul class="actions">
-										<li><a href="{%url 'Offers' %}" class="button">Offer</a></li>
+										<li><input type="submit" value=Offer></li>
 									</ul>
 								</form>
 							</section>

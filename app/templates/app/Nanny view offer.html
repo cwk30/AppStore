@@ -7,7 +7,7 @@
 -->
 <html>
 	<head>
-		<title>My Sitter Hub</title>
+		<title>Offer</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
@@ -31,52 +31,46 @@
 				</div>
 			</section>
 
-		<!-- Wrapper -->
-			<div id="wrapper">
-				<!-- One -->
-					<section id="one" class="wrapper style2 fullscreen fade-up">
+		
+				<!-- Three -->
+					<section id="three" class="wrapper style3 fade-up">
 						<div class="inner">
-							<h1>Welcome Back!</h1>
-						
-							<div class="split style1">
+							<br>
+							<h1>Offer ID</h1>
+							<div>
 								<section>
-									<h2>This month's perfomance</h2>
 									<form method="post" action="#">
 										<div class="fields">
-											<div class="field ">
-												<label for="name">Number of applications:</label>
-												<p></p>
+											<div class="field quarter">
+												<label for="first name">First Name</label>
+												<p>first name</p>
 											</div>
-											<div class="field">
-												<label for="email">Number of bookings:</label>
-												<input type="text" name="email" id="email" />
+											<div class="field quarter">
+												<label for="last name">First Name</label>
+												<p>last name</p>
 											</div>
-											<div class="field">
-												<label for="message">Number of Requests:</label>
-									
+											<div class="field half">
+												<label for="email">Email</label>
+												<p>email</p>
+											</div>
+											<div class="field half">
+												<label for="NRIC">NRIC</label>
+												<p>NRIC no</p>
+											</div>
+											<div class="field half">
+												<label for="Password">Passowrd</label>
+												<p>Password</p>
 											</div>
 										</div>
 										<ul class="actions">
-											<li><a href="{% url 'Opportunities' %}" class="button submit">Find more opportunities!</a></li>
+											<li><a href="{% url 'Nanny Profile Update' %}" class="button">Update Profile</a></li>
 										</ul>
 									</form>
 								</section>
-								<section>
-									<h2>Tips and Hacks!</h2>
-									<h3>Dealing with difficult kids</h3>
-									<iframe width="500" height="250"src="https://www.youtube.com/embed/BDzIcwiWFlQ"></iframe>
-									<h3>Useful resources:</h3>
-									<ul>
-										<li><a href="https://kidsit.com/things-to-do-when-babysitting">Activities for kids</a></li>
-										<li><a href="https://kidsit.com/teenager-babysitting">How to babysit teenagers</a></li>
-									</ul>
 
-
-								</section>
-							</div>
 						</div>
 					</section>
-
+					
 			</div>
 
 		<!-- Footer -->
