@@ -152,9 +152,6 @@ def nannyedit(request):
  
     return render(request, "app/nannyedit.html", context)
 
-
-
-
 @login_required
 def nannyscheduleadd(request):
     # Create a form instance and populate it with data from the request (binding):
