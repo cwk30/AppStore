@@ -1,7 +1,7 @@
 {% load static %}
 <html>
 <body>
-    <h2>Nanny Requests</h2>
+    <h2>Offers for Job {{jobid}}</h2>
     <br/><br/>
     <h3>Pending</h3>
     <table border=1>
@@ -13,11 +13,11 @@
         <tr>
             <td> {{ record.0 }} {{ record.1 }} </td>
             <td>
-                <a href="parentjobs/{{record.3}}"><button>View</button></a>
+                <a href="nannyview/{{record.3}}"><button>View</button></a>
                 
                 <form method="POST" style="display: inline;">
                 {% csrf_token %}
-                <input type="hidden" name="id" value="{{record.2}}"/>
+                <input type="hidden" name="id" value="{{record.4}}"/>
                 <button onclick="return confirm('Are you sure you want to reject {{record.0}}?');" type="submit" name="action" value="reject">Reject</button>
                 <button onclick="return confirm('Are you sure you want to accept {{record.0}}?');" type="submit" name="action" value="accept">Accept</button> 
               </form></td>

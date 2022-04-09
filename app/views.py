@@ -451,8 +451,40 @@ def parentjobs(request,id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [id])
         results = cursor.fetchall()
-        result_dict = {'record':results}
+        cursor.execute("SELECT first_name, last_name FROM auth_user WHERE id = %s", [id])
+        name = cursor.fetchone()
+        print(name)
+        
+        result_dict = {'record':results, 'names':name}
     return render(request,'app/parentjobs.html',result_dict)
+
+def parentoffers(request,id):
+    current_user = request.user
+    ## Accept
+    if request.POST:
+        
+        if request.POST['action'] == 'accept':
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE app_appliednanny SET status='accepted' WHERE applyid = %s", [request.POST['id']])
+                
+                
+        if request.POST['action'] == 'reject':
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE app_appliednanny SET status='rejected' WHERE applyid = %s", [request.POST['id']])
+                
+
+    ## Use raw query to get all objects
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'pending',id])
+        pendings = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'accepted',id])
+        accepts = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'rejected',id])
+        rejects = cursor.fetchall()
+
+    result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects, 'jobid':id}
+
+    return render(request,'app/parentoffers.html',result_dict)
 
 #VIEW ALL JOBS WHICH NANNY (CURRENT USER) HAS APPLIED
 @login_required
