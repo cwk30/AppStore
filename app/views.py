@@ -51,10 +51,10 @@ def view_applicants(request):
     return render(request,'app/Parent view offer applicants.html')
 def elements(request):
     return render(request,'app/elements.html')
-def index(request):
-    return render(request,'app/index.html')
-def index2(request):
-    return render(request,'app/index 2.html')
+# def index(request):
+#     return render(request,'app/index.html')
+# def index2(request):
+#     return render(request,'app/index 2.html')
 
 
 #-----------------------------------LOGIN REGISTER FUNCTIONS-----------------------------------#
