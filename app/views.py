@@ -306,7 +306,7 @@ def parents_browse_sitters(request):
             max_rate=NannyFilter_form.cleaned_data['max_rate']
             min_experience_req=NannyFilter_form.cleaned_data['min_experience_req']
             with connection.cursor() as cursor:
-                cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me,n.id FROM auth_user u, app_nanny n WHERE (n.user_id=u.id AND n.start_date <= %s AND n.end_date >= %s AND n.rate<=%s AND n.experience>=%s) AND ((date_part('hour',n.start_time) < %s) OR ((date_part('hour',n.start_time) = %s AND (date_part('minute',n.start_time) < %s)))) AND ((date_part('hour',n.end_time) > %s) OR ((date_part('hour',n.end_time) = %s AND (date_part('minute',n.end_time) > %s))))",
+                cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me, n.id FROM auth_user u, app_nanny n WHERE (n.user_id=u.id AND n.start_date <= %s AND n.end_date >= %s AND n.rate<=%s AND n.experience>=%s) AND ((date_part('hour',n.start_time) < %s) OR ((date_part('hour',n.start_time) = %s AND (date_part('minute',n.start_time) < %s)))) AND ((date_part('hour',n.end_time) > %s) OR ((date_part('hour',n.end_time) = %s AND (date_part('minute',n.end_time) > %s))))",
                 [max_start_date.strftime("%Y-%m-%d"), min_end_date.strftime("%Y-%m-%d"), str(max_rate), str(min_experience_req), max_start_time.strftime("%H"),max_start_time.strftime("%H"),max_start_time.strftime("%M"), min_end_time.strftime("%H"),min_end_time.strftime("%H"),min_end_time.strftime("%M")]) 
                 results = namedtuplefetchall(cursor)
             return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
@@ -314,7 +314,7 @@ def parents_browse_sitters(request):
     else:
         NannyFilter_form = NannyFilterForm
         with connection.cursor() as cursor:
-            cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me,n.id FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
+            cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me, n.id FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
 @login_required
