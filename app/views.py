@@ -22,16 +22,14 @@ def index(request):
     return render(request,'app/landing.html')
 def nanny_page(request):
     return render(request,'app/Nanny Page.html')
-def nanny_bookings(request):
-    return render(request,'app/Nanny Bookings.html')
+
 
 
 
 def parent_page(request):
     return render(request,'app/Parent page.html')
 
-def parent_bookings(request):
-    return render(request,'app/Parent Bookings.html')
+
 def view_applicants(request):
     return render(request,'app/Parent view offer applicants.html')
 
@@ -56,7 +54,7 @@ def parentloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='parent')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/parent_page')
+            return redirect('/parent#login')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
@@ -87,7 +85,7 @@ def nannyloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='nanny')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/nanny_page')
+            return redirect('/nanny#login')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
@@ -584,7 +582,7 @@ def edit(request, id):
 
 #OLD NANNY AVAIL ADD
 @login_required
-def nannyscheduleadd(request):
+def nanny_availability_create(request):
     # Create a form instance and populate it with data from the request (binding):
     nannyavail_form = NannyAvailableForm(request.POST)
     # Check if the form is valid:
@@ -601,12 +599,12 @@ def nannyscheduleadd(request):
                                 about_me = nannyavail_form.cleaned_data['about_me'])
         availability.save()
         messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
-        return redirect('/nannyscheduleadd')
+        return redirect('/nanny_page')
 
     else:
         nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
 
-    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})
+    return render(request, 'app/Nanny Availability Create.html',{'nannyavail_form': nannyavail_form})
 
 
 #-----------------------------------WHY ARE U HERE-----------------------------------#

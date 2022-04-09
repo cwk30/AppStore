@@ -1,16 +1,14 @@
 <html>
-<body>
-    <h2>Nanny Profile Availability</h2>
-    <a href="/">Back to home</a>
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
-    <p style="color:red">{{ status|safe }}</p>
-    <!-- Availability  -->
-    <article id="enter_availability">
-        <h2 class="major"> Enter your details and availability </h2>
+    <head>
+		<title>My Sitter Profile</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'app/main/assets/css/noscript.css' %}" /></noscript>
+	</head>
+<body class="is-preload">
+    <h1>Nanny Profile Availability</h1>
+        <h2> Enter your details and availability </h2>
         <form method="POST" action="">
             {% csrf_token  %}
             <div class="fields">
