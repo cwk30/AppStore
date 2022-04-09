@@ -2,7 +2,7 @@ from cmd import IDENTCHARS
 from django.shortcuts import render, redirect
 from django.db import connection, transaction
 from django.http import HttpResponse
-from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm, JobFilterForm, NannyAvailableForm, UserUpdateForm
+from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm, JobFilterForm, NannyAvailableForm, UserUpdateForm, NannyFilterForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -408,7 +408,7 @@ def nannyview(request, id):
             if curr_nannyid == None:
                 cursor.execute("INSERT INTO app_request (tositter_id, fromparent_id, status) VALUES (%s, %s, 'pending')", [str(nannyv_dict["nannyv"][8]),str(current_user.id)])
                 status = 'Requested successfully!'
-                return redirect('/parentsbrowsenannies')
+                return redirect('/parent_browse_sitters')
             else:
                 status = 'You have already requested!'
     
@@ -436,7 +436,7 @@ def nannyreqs(request):
 
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT u.first_name, u.last_name, r.requestid FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'pending'])
+        cursor.execute("SELECT u.first_name, u.last_name, r.requestid, u.id FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'pending'])
         pendings = cursor.fetchall()
         cursor.execute("SELECT u.first_name, u.last_name, u.username FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'accepted'])
         accepts = cursor.fetchall()
@@ -446,6 +446,13 @@ def nannyreqs(request):
     result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects}
 
     return render(request,'app/nannyreq.html',result_dict)
+
+def parentjobs(request,id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [id])
+        results = cursor.fetchall()
+        result_dict = {'record':results}
+    return render(request,'app/parentjobs.html',result_dict)
 
 #VIEW ALL JOBS WHICH NANNY (CURRENT USER) HAS APPLIED
 @login_required
