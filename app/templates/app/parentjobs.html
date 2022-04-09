@@ -1,0 +1,25 @@
+{% load static %}
+<html>
+<body>
+    <h2>Jobs from this Parent {{names.0}} {{names.1}}</h2>
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    <br/><br/>
+        {% for item in record %}
+            
+        <p>start date: {{item.1}}</p>
+        <p>start time: {{item.2}}</p>
+        <p>end date: {{item.3}}</p>
+        <p>end time: {{item.4}}</p>
+        <p>rate: {{item.5}}</p>
+        <p>experience req: {{item.6}}</p>
+        <p>job req: {{item.7}}</p>
+                
+            
+        <br/>
+        {% endfor %}
+    
+    
+</body>
+</html>

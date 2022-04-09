@@ -1,0 +1,54 @@
+{% load static %}
+<html>
+<body>
+    <h2>Offers for Job {{jobid}}</h2>
+    <br/><br/>
+    <h3>Pending</h3>
+    <table border=1>
+        <thead>
+            <th>Name</th>
+            <th>Action</th>
+        </thead>
+        {% for record in pending %}
+        <tr>
+            <td> {{ record.0 }} {{ record.1 }} </td>
+            <td>
+                <a href="nannyview/{{record.3}}"><button>View</button></a>
+                
+                <form method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{record.4}}"/>
+                <button onclick="return confirm('Are you sure you want to reject {{record.0}}?');" type="submit" name="action" value="reject">Reject</button>
+                <button onclick="return confirm('Are you sure you want to accept {{record.0}}?');" type="submit" name="action" value="accept">Accept</button> 
+              </form></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>Accepted</h3>
+    <table border=1>
+        <thead>
+            <th>Name</th>
+            <th>Email</th>
+        </thead>
+        {% for record in accepted %}
+        <tr>
+            <td> {{ record.0 }} {{ record.1 }} </td>
+            <td>{{record.2}}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>Rejected</h3>
+    <table border=1>
+        <thead>
+            <th>Name</th>
+        </thead>
+        {% for record in rejected %}
+        <tr>
+            <td> {{ record.0 }} {{ record.1 }} </td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

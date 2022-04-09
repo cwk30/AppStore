@@ -2,7 +2,7 @@ from cmd import IDENTCHARS
 from django.shortcuts import render, redirect
 from django.db import connection, transaction
 from django.http import HttpResponse
-from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm, JobFilterForm, NannyAvailableForm, UserUpdateForm
+from .forms import UserRegistrationForm, UserLoginForm, JobCreationForm, JobFilterForm, NannyAvailableForm, UserUpdateForm, NannyFilterForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -49,10 +49,10 @@ def view_applicants(request):
 
 def elements(request):
     return render(request,'app/elements.html')
-def index(request):
-    return render(request,'app/index.html')
-def index2(request):
-    return render(request,'app/index 2.html')
+# def index(request):
+#     return render(request,'app/index.html')
+# def index2(request):
+#     return render(request,'app/index 2.html')
 
 
 #-----------------------------------LOGIN REGISTER FUNCTIONS-----------------------------------#
@@ -153,13 +153,14 @@ def parent_profile(request):
     current_user = request.user
     result_dict = {}
     with connection.cursor() as cursor:
-        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob FROM auth_user u left join app_usersext e on u.id = e.user_id where u.id = %s"
+        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.username, e.dob FROM auth_user u left join app_usersext e on u.id = e.user_id where u.id = %s"
                         , [current_user.id])
         results = cursor.fetchone()
     result_dict['records'] = results
     return render(request,'app/Parent Profile.html',result_dict)
 
 #UPDATE PARENT PROFILE (CURRENT USER)
+@login_required
 def parent_profile_update(request):
     current_user = request.user
     if request.method == 'POST':
@@ -189,7 +190,7 @@ def nanny_profile_page(request):
     current_user = request.user
     result_dict = {}
     with connection.cursor() as cursor:
-        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob, u.password, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u left join app_usersext e on  u.id = e.user_id left join app_nanny n on u.id = n.user_id where u.id = %s"
+        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.username, e.dob, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u left join app_usersext e on  u.id = e.user_id left join app_nanny n on u.id = n.user_id where u.id = %s"
                         , [current_user.id])
         results = cursor.fetchone()
     result_dict['records'] = results
@@ -250,6 +251,7 @@ def nanny_profile_update(request):
 
     return render(request, 'app/Nanny Profile Update.html',{'userupdate_form': userupdate_form})
 
+@login_required
 def nannyscheduleadd(request):
     # Create a form instance and populate it with data from the request (binding):
     nannyavail_form = NannyAvailableForm(request.POST)
@@ -257,8 +259,7 @@ def nannyscheduleadd(request):
     if nannyavail_form.is_valid():
         # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
         current_user = request.user
-        with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM app_nanny WHERE user_id = %s",str(current_user.id))
+        
         availability = nanny(user=current_user, 
                                 start_date=nannyavail_form.cleaned_data['start_date'], 
                                 start_time=nannyavail_form.cleaned_data['start_time'],
@@ -354,7 +355,7 @@ def parents_browse_sitters(request):
             cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
-
+@login_required
 def nanny_view_offer(request, id):
     # dictionary for initial data with
     # field names as keys
@@ -372,11 +373,9 @@ def nanny_view_offer(request, id):
         current_user = request.user
         with connection.cursor() as cursor:
             #check if nanny already applied
-            cursor.execute('SELECT id FROM app_nanny WHERE user_id = %s', [str(current_user.id)])
-            results = namedtuplefetchall(cursor)
-            print(results[0][0])
-            cursor.execute("SELECT * FROM app_appliednanny WHERE nannyid_id = %s", [str(results[0][0])])
+            cursor.execute("SELECT * FROM app_appliednanny a, app_nanny n WHERE a.nannyid_id=n.id AND n.user_id = %s AND a.jobid_id = %s", [str(current_user.id),str(id)])
             curr_nannyid = cursor.fetchone()
+            
             ## No nanny with same id
             if curr_nannyid == None:
                 cursor.execute("INSERT INTO app_appliednanny (jobid_id,nannyid_id,status) VALUES (%s, %s,'pending')", [str(id), str(results[0][0])])
@@ -421,24 +420,81 @@ def parent_view_sitter(request):
     context['status'] = status
     return render(request,'app/Parent view sitter.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
     
+    
+@login_required
 def nannyreqs(request):
     """Shows the main page""" 
-
-    ## Delete customer
+    current_user = request.user
+    ## Accept
     if request.POST:
-        current_user = request.user
-        if request.POST['action'] == 'delete':
+        
+        if request.POST['action'] == 'accept':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM customers WHERE customerid = %s", [request.POST['id']])
+                cursor.execute("UPDATE app_request SET status='accepted' WHERE requestid = %s", [request.POST['id']])
+                cursor.execute("SELECT u.username FROM auth_user u,app_request r WHERE r.requestid = %s and r.fromparent=u.id", [request.POST['id']])
+                view_email = cursor.fetchone()
+                print(view_email)
+                
+                messages.info(request,view_email )
+        
+        if request.POST['action'] == 'reject':
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE app_request SET status='rejected' WHERE requestid = %s", [request.POST['id']])
+                
 
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM request WHERE tositter_id= %s",[str(current_user.id)])
-        requests = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, r.requestid, u.id FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'pending'])
+        pendings = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, u.username FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'accepted'])
+        accepts = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'rejected'])
+        rejects = cursor.fetchall()
 
-    result_dict = {'records': requests}
+    result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects}
 
-    return render(request,'app/nannyreqs.html',result_dict)
+    return render(request,'app/nannyreq.html',result_dict)
+
+@login_required
+def parentjobs(request,id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [id])
+        results = cursor.fetchall()
+        cursor.execute("SELECT first_name, last_name FROM auth_user WHERE id = %s", [id])
+        name = cursor.fetchone()
+        print(name)
+        
+        result_dict = {'record':results, 'names':name}
+    return render(request,'app/parentjobs.html',result_dict)
+
+@login_required
+def parentoffers(request,id):
+    current_user = request.user
+    ## Accept
+    if request.POST:
+        
+        if request.POST['action'] == 'accept':
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE app_appliednanny SET status='accepted' WHERE applyid = %s", [request.POST['id']])
+                
+                
+        if request.POST['action'] == 'reject':
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE app_appliednanny SET status='rejected' WHERE applyid = %s", [request.POST['id']])
+                
+
+    ## Use raw query to get all objects
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'pending',id])
+        pendings = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'accepted',id])
+        accepts = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'rejected',id])
+        rejects = cursor.fetchall()
+
+    result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects, 'jobid':id}
+
+    return render(request,'app/parentoffers.html',result_dict)
 
 #VIEW ALL JOBS WHICH NANNY (CURRENT USER) HAS APPLIED
 @login_required
@@ -456,7 +512,7 @@ def nanny_application(request):
     print(result_dict)
     return render(request, "app/Nanny Application.html", result_dict)
 
-
+@login_required
 def logoutuser(request):
     logout(request)
     user = None
@@ -546,35 +602,6 @@ def edit(request, id):
     context["status"] = status
  
     return render(request, "app/edit.html", context)
-
-#OLD NANNY AVAIL ADD
-@login_required
-def nannyscheduleadd(request):
-    # Create a form instance and populate it with data from the request (binding):
-    nannyavail_form = NannyAvailableForm(request.POST)
-    # Check if the form is valid:
-    if nannyavail_form.is_valid():
-        # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
-        current_user = request.user
-        with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM app_nanny WHERE user = current_user")
-        availability = nanny(user=current_user, 
-                                start_date=nannyavail_form.cleaned_data['start_date'], 
-                                start_time=nannyavail_form.cleaned_data['start_time'],
-                                end_date=nannyavail_form.cleaned_data['end_date'],
-                                end_time=nannyavail_form.cleaned_data['end_time'],
-                                rate=nannyavail_form.cleaned_data['rate'],
-                                experience=nannyavail_form.cleaned_data['experience'],
-                                about_me = nannyavail_form.cleaned_data['about_me'])
-        availability.save()
-        messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
-        return redirect('/nannyscheduleadd')
-
-    else:
-        nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
-
-    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})
-
 
 #-----------------------------------WHY ARE U HERE-----------------------------------#
 # @login_required

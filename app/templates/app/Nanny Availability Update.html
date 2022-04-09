@@ -39,37 +39,111 @@
 							<h2>Update Availability and Experience</h2>
 							<p>Only fill in field that needs to be updated</p>
 								<section>
-									<form method="post" action="#">
+									<form method="POST" action="">
+										{% csrf_token  %}
 										<div class="fields">
-											<div class="field quarter">
-												<label for="Start Date">Start Date</label>
-												<input type="text" name="Start Date" id="Start Date" />
+											<div class="field half">
+												{{ nannyavail_form.start_date.label }}
+							
+												{% if nannyavail_form.start_date.errors %}  
+													{{ nannyavail_form.start_date}}
+													<div class="invalid-feedback">
+														{% for error in nannyavail_form.start_date.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ nannyavail_form.start_date }}
+												{% endif %}
 											</div>
-											<div class="field quarter">
-												<label for="End Date">End Date</label>
-												<input type="text" name="End Date" id="End Date" />
+							
+											<div class="field half">
+												{{ nannyavail_form.end_date.label }}
+							
+												{% if nannyavail_form.end_date.errors %}  
+													{{ nannyavail_form.end_date}}
+													<div class="invalid-feedback">
+														{% for error in nannyavail_form.end_date.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ nannyavail_form.end_date }}
+												{% endif %}
 											</div>
-											<div class="field quarter">
-												<label for="Start Time">Start Time</label>
-												<input type="text" name="Start Time" id="Start Time" />
+							
+											<div class="field half">
+												{{ nannyavail_form.start_time.label }}
+							
+												{% if nannyavail_form.start_time.errors %}  
+													{{ nannyavail_form.start_time}}
+													<div class="invalid-feedback">
+														{% for error in nannyavail_form.start_time.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ nannyavail_form.start_time }}
+												{% endif %}
 											</div>
-											<div class="field quarter">
-												<label for="End Time">End Time</label>
-												<input type="text" name="End Date" id="End Date" />
+							
+											<div class="field half">
+												{{ nannyavail_form.end_time.label }}
+							
+												{% if nannyavail_form.end_time.errors %}  
+													{{ nannyavail_form.end_time}}
+													<div class="invalid-feedback">
+														{% for error in nannyavail_form.end_time.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ nannyavail_form.end_time }}
+												{% endif %}
 											</div>
 											<div class="field half">
-												<label for="Number of Experience">Number of Experience</label>
-												<input type="text" name="End Date" id="End Date" />
+												{{ nannyavail_form.rate.label }}
+							
+												{% if nannyavail_form.rate.errors %}  
+													{{ nannyavail_form.rate}}
+													<div class="invalid-feedback">
+														{% for error in nannyavail_form.rate.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ nannyavail_form.rate }}
+												{% endif %}
 											</div>
 											<div class="field half">
-												<label for="Rate">Rate</label>
-												<input type="text" name="Rate" id="Rate" />
+												{{ nannyavail_form.experience.label }}
+							
+												{% if nannyavail_form.experience.errors %}  
+													{{ nannyavail_form.experience}}
+													<div class="invalid-feedback">
+														{% for error in nannyavail_form.experience.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ nannyavail_form.experience }}
+												{% endif %}
 											</div>
-											<div class="field ">
-												<label for="About me">About me</label>
-												<input type="text" name="About me" id="About me" />
+											<div class="field half">
+												{{ nannyavail_form.about_me.label }}
+							
+												{% if nannyavail_form.about_me.errors %}  
+													{{ nannyavail_form.about_me}}
+													<div class="invalid-feedback">
+														{% for error in nannyavail_form.about_me.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ nannyavail_form.about_me }}
+												{% endif %}
 											</div>
-										</div>
+							
 										<ul class="actions">
 											<li><a href="{%url 'Nanny Profile Page' %}" class="button">Update</a></li>
 										</ul>
