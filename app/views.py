@@ -434,13 +434,15 @@ def nanny_view_parent_jobs(request,id):
 def parent_offers(request):
     current_user = request.user
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [str(current_user.id)])
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s AND status='pending'", [str(current_user.id)])
         results = cursor.fetchall()
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s AND status='closed'", [str(current_user.id)])
+        resultsclosed = cursor.fetchall()
         cursor.execute("SELECT first_name, last_name FROM auth_user WHERE id = %s", [str(current_user.id)])
         name = cursor.fetchone()
         print(name)
         
-        result_dict = {'record':results, 'names':name}
+        result_dict = {'record':results, 'names':name, 'resultsclosed':resultsclosed}
     return render(request,'app/Parent Offers.html',result_dict)
 
 def parentoffers(request,id):
@@ -451,6 +453,8 @@ def parentoffers(request,id):
         if request.POST['action'] == 'accept':
             with connection.cursor() as cursor:
                 cursor.execute("UPDATE app_appliednanny SET status='accepted' WHERE applyid = %s", [request.POST['id']])
+                cursor.execute("UPDATE app_job SET status='closed' WHERE jobid = %s", [id])
+                
                 
                 
         if request.POST['action'] == 'reject':
