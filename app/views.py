@@ -248,6 +248,9 @@ def nanny_profile_update(request):
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
             return redirect('/nanny_profile_page')
     # If this is a GET (or any other method) create the default form.
+    userupdate_form = UserUpdateForm
+
+    return render(request, 'app/Nanny Profile Update.html',{'userupdate_form':userupdate_form})
 
 
 #NANNY BROWSE JOBS CREATED BY PARENTS
