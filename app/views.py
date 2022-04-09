@@ -21,17 +21,52 @@ def namedtuplefetchall(cursor):
 def index(request):
     return render(request,'app/landing.html')
 def nanny_page(request):
-    return render(request,'app/Nanny Page.html')
+    current_user = request.user
+    result_dict={}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM app_appliednanny a, app_nanny n WHERE a.nannyid_id=n.id AND n.user_id=%s"
+                        , [current_user.id])
+        counts = cursor.fetchone()
+        cursor.execute("SELECT COUNT(*) FROM app_appliednanny a, app_nanny n WHERE a.nannyid_id=n.id AND a.status='accepted' AND n.user_id=%s"
+                        , [current_user.id])
+        countsa = cursor.fetchone()
+        cursor.execute("SELECT COUNT(*) FROM app_request r WHERE r.tositter_id=%s"
+                        , [current_user.id])
+        countsb = cursor.fetchone()
+        
+    result_dict['applications'] = counts[0]
+    result_dict['bookings'] = countsa[0]
+    result_dict['requests'] = countsb[0]
+    return render(request,'app/Nanny Page.html',result_dict)
 
+def nanny_bookings(request):
+    return render(request,'app/Nanny Bookings.html')
 
 
 
 def parent_page(request):
-    return render(request,'app/Parent page.html')
+    current_user = request.user
+    result_dict={}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM app_appliednanny a, app_jobs j WHERE a.jobid_id=j.jobid AND a.status='accepted' AND j.user_id=%s"
+                        , [current_user.id])
+        counts = cursor.fetchone()
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id=%s"
+                        , [current_user.id])
+        countsa = cursor.fetchone()
+        cursor.execute("SELECT * FROM app_request WHERE fromparent_id=%s"
+                        , [current_user.id])
+        countsb = cursor.fetchone()
+        cursor.execute("SELECT u.first_name, u.last_name, COUNT(r.tositter_id) FROM app_request r, auth_user u WHERE r.tositter_id = u.id GROUP BY u.first_name, u.last_name ORDER BY COUNT(u.first_name) DESC LIMIT 1")
+        countsc = cursor.fetchone()
+        
+        
+    result_dict['bookings'] = counts[0]
+    result_dict['offers'] = countsa[0]
+    result_dict['requests'] = countsb[0]
+    result_dict['supersitter']=countsc
 
-
-def view_applicants(request):
-    return render(request,'app/Parent view offer applicants.html')
+    return render(request,'app/Parent page.html',result_dict)
 
 def elements(request):
     return render(request,'app/elements.html')
@@ -54,7 +89,7 @@ def parentloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='parent')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/parent#login')
+            return redirect('/parent_page')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
@@ -85,7 +120,7 @@ def nannyloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='nanny')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/nanny#login')
+            return redirect('/nanny_page')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:

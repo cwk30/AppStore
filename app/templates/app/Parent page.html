@@ -41,11 +41,12 @@
 									<form method="post" action="#">
 										<div class="fields">
 											<div class="field full">
-												<label for="name">Number of accepted offers with us:</label>
+												<label for="name">Number of accepted offers with us: {{bookings}}</label>
 											</div>
 											<div class="field full">
-												<label for="email">Number of requests with us:</label>
+												<label for="email">Number of requests with us: {{requests}}</label>
 											</div>
+											
 										</div>
 										<ul class="actions">
 											<li><a href="{% url 'Make an Offer' %}" class="button">Create more offers!</a></li>
@@ -55,17 +56,13 @@
 								</section>
 								<section>
 									<ul class="contact">
-										<h1>Our supersitters</h1>
+										<h1>Our supersitter</h1>
 										<li>
-											<h3>Sitter with the most bookings!</h3>
-											<span>12345 Somewhere Road #654<br />
-											Nashville, TN 00000-0000<br />
-											USA</span>
+											<h3>Sitter with the most requests:</h3>
+											<h2>{{supersitter.0}} {{supersitter.1}}</h2>
+											with {{supersitter.2}} bookings!<br />
 										</li>
-										<li>
-											<h3>Sitter with the most requests!</h3>
-											<a href="#">user@untitled.tld</a>
-										</li>
+										
 										<li>
 											<h3>Find us on!</h3>
 											<ul class="icons">
