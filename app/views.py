@@ -370,11 +370,9 @@ def jobview(request, id):
         current_user = request.user
         with connection.cursor() as cursor:
             #check if nanny already applied
-            cursor.execute('SELECT id FROM app_nanny WHERE user_id = %s', [str(current_user.id)])
-            results = namedtuplefetchall(cursor)
-            print(results[0][0])
-            cursor.execute("SELECT * FROM app_appliednanny WHERE nannyid_id = %s", [str(results[0][0])])
+            cursor.execute("SELECT * FROM app_appliednanny a, app_nanny n WHERE a.nannyid_id=n.id AND n.user_id = %s AND a.jobid_id = %s", [str(current_user.id),str(id)])
             curr_nannyid = cursor.fetchone()
+            
             ## No nanny with same id
             if curr_nannyid == None:
                 cursor.execute("INSERT INTO app_appliednanny (jobid_id,nannyid_id,status) VALUES (%s, %s,'pending')", [str(id), str(results[0][0])])
