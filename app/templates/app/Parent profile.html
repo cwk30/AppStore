@@ -44,24 +44,24 @@
 									<div class="fields">
 										<div class="field quarter">
 											<label for="first name">First Name</label>
-											<p>first name</p>
+											<p> {{ records.1 }} </p>
 										</div>
 										<div class="field quarter">
 											<label for="last name">First Name</label>
-											<p>last name</p>
+											<p> {{ records.2 }} </p>
 										</div>
 										<div class="field half">
 											<label for="email">Email</label>
-											<p>email</p>
+											<p> {{ records.3 }} </p>
 										</div>
 										<div class="field half">
 											<label for="NRIC">NRIC</label>
-											<p>NRIC no</p>
-										</div>
+											<p> {{ records.0 }} </p>
+										</div>	
 										<div class="field half">
-											<label for="Password">Passowrd</label>
-											<p>Password</p>
-										</div>
+											<label for="dob">Date of Birth</label>
+											<p> {{ records.4 }} </p>
+										</div>	
 									</div>
 									<ul class="actions">
 										<li><a href="{% url 'Parent Profile Update' %}" class="button">Update Profile</a></li>
