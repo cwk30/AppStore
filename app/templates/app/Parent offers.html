@@ -60,31 +60,22 @@
 									</section>
 								</div>
 								<div class="col-4 col-6-medium col-12-medium">
+									{% for item in record %}
 									<section class="box">
-										<header>
-											<h3>Job ID</h3>
-										</header>
-										<p>Job description goes here</p>
-										{% for item in record %}
-            
-										<p>start date: {{item.1}}</p>
-										<p>start time: {{item.2}}</p>
-										<p>end date: {{item.3}}</p>
-										<p>end time: {{item.4}}</p>
-										<p>rate: {{item.5}}</p>
-										<p>experience req: {{item.6}}</p>
-										<p>job req: {{item.7}}</p>
-												
-											
-								 
-										{% endfor %}
+										<p>Start date: {{item.1}}</p>
+										<p>End date: {{item.3}}</p>
+										<p>Start time: {{item.2}}</p>
+										<p>End time: {{item.4}}</p>
+										<p>Rate: {{item.5}}</p>
+										<p>Experience required: {{item.6}}</p>
+										<p>Job requirement: {{item.7}}</p>
 										<footer>
 											<ul class="actions">
 												<a href="{% url 'View Applicants' %}" class="button small">Choose Nanny</a>
-												<a href="#" class="button small">Close Offer</a>
 											</ul>
 										</footer>
 									</section>
+									{% endfor %}
 								</div>
 							</div>
 						</div>
