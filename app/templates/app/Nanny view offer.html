@@ -21,7 +21,6 @@
 					<nav>
 						<ul>
 							<li><a href="{%url 'Nanny Hub'%}">Nanny Hub</a></li>
-							<li><a href="{%url 'Nanny Bookings'%}">Bookings</a></li>
 							<li><a href="{%url 'Application'%}"">Application</a></li>
 							<li><a href="{%url 'Requests'%}">Requests</a></li>
 							<li><a href="{%url 'Opportunities'%}">Opportunities</a></li>
@@ -39,31 +38,26 @@
 							<h1>Offer ID</h1>
 							<div>
 								<section>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field quarter">
-												<label for="first name">First Name</label>
-												<p>first name</p>
-											</div>
-											<div class="field quarter">
-												<label for="last name">First Name</label>
-												<p>last name</p>
-											</div>
-											<div class="field half">
-												<label for="email">Email</label>
-												<p>email</p>
-											</div>
-											<div class="field half">
-												<label for="NRIC">NRIC</label>
-												<p>NRIC no</p>
-											</div>
-											<div class="field half">
-												<label for="Password">Passowrd</label>
-												<p>Password</p>
-											</div>
-										</div>
+									<header>
+										<h3>{{ item.0 }} {{ item.1}}</h3>
+									</header>
+									<p>
+										<b>Start Date:</b> {{ jobv.1 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>End Date:</b> {{ jobv.3 }}<br>
+										<b>Daily Start time:</b> {{ jobv.2 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>Daily End Time</b>: {{ jobv.4 }}<br>
+										<b>Rate:</b> {{ jobv.5 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>Experience:</b> {{ jobv.6 }}<br>
+										<b>Description:</b> {{ jobv.7 }}<br>
+									</p>
+									
+									 <!-- Create a Form -->
+									 <form method="POST">
+										<!-- Security token by Django -->
+										{% csrf_token %}
+										<!-- form -->
 										<ul class="actions">
-											<li><a href="{% url 'Nanny Profile Update' %}" class="button">Update Profile</a></li>
+											<li><input type="Submit" value=Apply></li>
 										</ul>
 									</form>
 								</section>

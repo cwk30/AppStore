@@ -21,7 +21,6 @@
 					<nav>
 						<ul>
 							<li><a href="{%url 'Nanny Hub'%}">Nanny Hub</a></li>
-							<li><a href="{%url 'Nanny Bookings'%}">Bookings</a></li>
 							<li><a href="{%url 'Application'%}"">Application</a></li>
 							<li><a href="{%url 'Requests'%}">Requests</a></li>
 							<li><a href="{%url 'Opportunities'%}">Opportunities</a></li>
@@ -34,96 +33,70 @@
 		<!-- Wrapper -->
 			<div id="wrapper">
 
-				<!-- Two -->
-					<section id="two" class="wrapper style3 fade-up">
+				<!-- One -->
+					<section id="One" class="wrapper style3 fade-up">
 
 						
 						<div class="inner">
 							<div class="align-center">
-								<a href="#two" class="button">Current Request</a>
-								<a href="#three" class="button">Past Requests</a>
+								<a href="#One" class="button">Pending Request</a>
+								<a href="#two" class="button">Accepted Requests</a>
+								<a href="#Three" class="button">Rejected Requests</a>
 							</div>
 							
-							<h2>Current Requests</h2>
+							<h2>Pending Requests</h2>
 							<p>Find parents who request for your service here.</p>
 							<div class="features">
+								{% for record in pending %}
 								<section>
-									<span class="icon solid major fa-code"></span>
-									<h3>Lorem ipsum amet</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>{{ record.0 }} {{ record.1 }}</h3>
+									<p></p>
 									<div class="align-center">
-										<a href="#" class="button">Accept</a>
-										<a href="#" class="button">Reject</a>
+					
+										<a href="nanny_view_parent_jobs/{{record.3}}" class="button">View</a>
+										<form method="POST" style="display: inline;">
+											{% csrf_token %}
+											<input type="hidden" name="id" value="{{record.2}}"/>
+											<button onclick="return confirm('Are you sure you want to reject {{record.0}}?');" type="submit" name="action" value="reject">Reject</button>
+											<button onclick="return confirm('Are you sure you want to accept {{record.0}}?');" type="submit" name="action" value="accept">Accept</button> 
+										  </form>
 									</div>
 								</section>
-								<section>
-									<span class="icon solid major fa-lock"></span>
-									<h3>Aliquam sed nullam</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-cog"></span>
-									<h3>Sed erat ullam corper</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-desktop"></span>
-									<h3>Veroeros quis lorem</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-link"></span>
-									<h3>Urna quis bibendum</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon major fa-gem"></span>
-									<h3>Aliquam urna dapibus</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-							
-							
+								{% endfor %}
 						</div>
 					</section>
 
-				<!-- Three -->
-					<section id="three" class="wrapper style3 fade-up">
+				<!-- Two -->
+					<section id="Two" class="wrapper style3 fade-up">
 						<div class="inner">
-							<h2>Past Requests</h2>
+							<h2>Accepted Requests</h2>
 							<div class="features">
+								{% for record in accepted %}
 								<section>
-									<span class="icon solid major fa-code"></span>
-									<h3>Lorem ipsum amet</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
+									<h3>{{ record.0 }} {{ record.1 }}</h3>
+									<p><b>Email:</b>{{ record.2 }}</p>
+									<div class="align-center">
+					
+										<a href="nanny_view_parent_jobs/{{record.3}}" class="button">View</a>
+									</div>
 								</section>
-								<section>
-									<span class="icon solid major fa-lock"></span>
-									<h3>Aliquam sed nullam</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-cog"></span>
-									<h3>Sed erat ullam corper</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-desktop"></span>
-									<h3>Veroeros quis lorem</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-link"></span>
-									<h3>Urna quis bibendum</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon major fa-gem"></span>
-									<h3>Aliquam urna dapibus</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
+								{% endfor %}
 							</div>
 						</div>
 					</section>
+				<!-- Three -->
+				<section id="Three" class="wrapper style3 fade-up">
+					<div class="inner">
+						<h2>Rejected Requests</h2>
+						<div class="features">
+							{% for record in rejected %}
+							<section>
+								<h3>{{ record.0 }} {{ record.1 }}</h3>
+							</section>
+							{% endfor %}
+						</div>
+					</div>
+				</section>
 
 			</div>
 

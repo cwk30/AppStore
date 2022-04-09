@@ -7,7 +7,7 @@
 -->
 <html>
 	<head>
-		<title>My Sitter Hub</title>
+		<title>Parent's Jobs</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
@@ -32,44 +32,43 @@
 
 		<!-- Wrapper -->
 			<div id="wrapper">
+
 				<!-- One -->
-					<section id="one" class="wrapper style2 fullscreen fade-up">
-						<div class="inner">
-							<h1>Welcome Back!</h1>
-						
-							<div class="split style1">
-								<section>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field ">
-												<h3>Number of applications: {{applications}}</h3>
+					<section id="One" class="wrapper style3 fade-up">
+							<div class ="wrapper">
+								<div class ="inner">
+								
+								<div class="features">
+									{% for item in record %}
+									<div class="wrapper">
+										<div class ="inner">
+											<p><b>Start date:</b> {{item.1}}  <b>End date:</b> {{item.3}}</p> 
+											<p><b>Start time:</b> {{item.2}} &nbsp;<b>End time</b>: {{item.4}}</p>
+											<p><b>Rate:</b> {{item.5}}</p>
+											<p><b>Experience required:</b> {{item.6}}</p>
+											<p><b>Job required:</b> {{item.7}}</p>
+											<ul class="actions">
+												<a href="{% url 'Nanny view offer' id=item.0 %}" class="button">View</a>
+											</ul>
 											</div>
-											<div class="field">
-												<h3>Number of Requests: {{requests}}</h3>
-											</div>
-										</div>
-										<ul class="actions">
-											<li><a href="{% url 'Opportunities' %}" class="button submit">Find more opportunities!</a></li>
-										</ul>
-									</form>
-								</section>
-								<section>
-									<h2>Tips and Hacks!</h2>
-									<h3>Dealing with difficult kids</h3>
-									<iframe width="500" height="250"src="https://www.youtube.com/embed/BDzIcwiWFlQ"></iframe>
-									<h3>Useful resources:</h3>
-									<ul>
-										<li><a href="https://kidsit.com/things-to-do-when-babysitting">Activities for kids</a></li>
-										<li><a href="https://kidsit.com/teenager-babysitting">How to babysit teenagers</a></li>
-									</ul>
-
-
-								</section>
+									</div>
+									{% endfor %}
+								</div>
+								
+								</div>
 							</div>
+								
+                
+								<div class ="wrapper">
+									<div class ="inner">
+										<a href="{% url 'Requests' %}" class="button">Back to Requests</a>
+									</div>
+								</div>
+								
 						</div>
 					</section>
-
 			</div>
+
 
 		<!-- Footer -->
 			<footer id="footer" class="wrapper style1-alt">
@@ -81,7 +80,7 @@
 			</footer>
 
 		<!-- Scripts -->
-			<script src="{% static 'app/main/assets/js/jquery.min.js' %}"></script>
+			<<script src="{% static 'app/main/assets/js/jquery.min.js' %}"></script>
 			<script src="{% static 'app/main/assets/js/jquery.scrollex.min.js' %}"></script>
 			<script src="{% static 'app/main/assets/js/jquery.scrolly.min.js' %}"></script>
 			<script src="{% static 'app/main/assets/js/browser.min.js' %}"></script>

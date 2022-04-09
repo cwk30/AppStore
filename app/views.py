@@ -20,35 +20,64 @@ def namedtuplefetchall(cursor):
 # Create your views here.
 def index(request):
     return render(request,'app/landing.html')
-def nanny_application(request):
-    return render(request,'app/Nanny Application.html')
 def nanny_page(request):
-    return render(request,'app/Nanny Page.html')
+    current_user = request.user
+    result_dict={}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM app_appliednanny a, app_nanny n WHERE a.nannyid_id=n.id AND n.user_id=%s"
+                        , [current_user.id])
+        counts = cursor.fetchone()
+        cursor.execute("SELECT COUNT(*) FROM app_appliednanny a, app_nanny n WHERE a.nannyid_id=n.id AND a.status='accepted' AND n.user_id=%s"
+                        , [current_user.id])
+        countsa = cursor.fetchone()
+        cursor.execute("SELECT COUNT(*) FROM app_request r WHERE r.tositter_id=%s"
+                        , [current_user.id])
+        countsb = cursor.fetchone()
+        
+    result_dict['applications'] = counts[0]
+    result_dict['bookings'] = countsa[0]
+    result_dict['requests'] = countsb[0]
+    return render(request,'app/Nanny Page.html',result_dict)
+
 def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
-def nanny_opportunities(request):
-    return render(request,'app/Nanny Opportunities.html')
 
 
-def nanny_profile_page(request):
-    return render(request,'app/Nanny Profile Page.html')
-def nanny_profile_update(request):
-    return render(request,'app/Nanny Profile Update.html')
-def nanny_availability_update(request):
-    return render(request,'app/Nanny Availability Update.html')
-def nanny_requests(request):
-    return render(request,'app/Nanny Requests.html')
 
-def parent_offers(request):
-    return render(request,'app/Parent offers.html')
 def parent_page(request):
-    return render(request,'app/Parent page.html')
-def parent_profile(request):
-    return render(request,'app/Parent profile.html')
-def parent_bookings(request):
-    return render(request,'app/Parent Bookings.html')
-def view_applicants(request):
-    return render(request,'app/Parent view offer applicants.html')
+    current_user = request.user
+    result_dict={}
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM app_appliednanny a, app_jobs j WHERE a.jobid_id=j.jobid AND a.status='accepted' AND j.user_id=%s"
+                        , [current_user.id])
+        counts = cursor.fetchone()
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id=%s"
+                        , [current_user.id])
+        countsa = cursor.fetchone()
+        cursor.execute("SELECT * FROM app_request WHERE fromparent_id=%s"
+                        , [current_user.id])
+        countsb = cursor.fetchone()
+        cursor.execute("SELECT u.first_name, u.last_name, COUNT(r.tositter_id) FROM app_request r, auth_user u WHERE r.tositter_id = u.id GROUP BY u.first_name, u.last_name ORDER BY COUNT(u.first_name) DESC LIMIT 1")
+        countsc = cursor.fetchone()
+        
+    if counts is None:
+        result_dict['bookings'] = 0
+    else:
+        result_dict['bookings'] = counts[0]
+    if countsa is None:
+        result_dict['offers'] = 0
+    else:
+        result_dict['offers'] = countsa[0]
+    if countsb is None:
+        result_dict['requests'] = 0
+    else:
+        result_dict['requests'] = countsb[0]
+    
+    result_dict['supersitter'] = countsc
+    
+
+    return render(request,'app/Parent page.html',result_dict)
+
 def elements(request):
     return render(request,'app/elements.html')
 # def index(request):
@@ -76,7 +105,7 @@ def parentloginregister(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, 'Login Successful')
-                return redirect('/parent#login')
+                return redirect('/parent_page')
             else:
                 messages.info(request, 'Login fail')
                 return redirect('/parent#login')
@@ -101,13 +130,13 @@ def nannyloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='nanny')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/parent#login')
+            return redirect('/nanny#login')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
                 messages.info(request, 'Login Successful')
-                return redirect('/nanny#login')
+                return redirect('/nanny_page')
             else:
                 messages.info(request, 'Login fail')
                 return redirect('/nanny#login')
@@ -166,6 +195,7 @@ def parent_profile(request):
 def parent_profile_update(request):
     current_user = request.user
     if request.method == 'POST':
+        
         # Create a form instance and populate it with data from the request (binding):
         userupdate_form = UserUpdateForm(request.POST)
         # Check if the form is valid:
@@ -173,11 +203,11 @@ def parent_profile_update(request):
             #PERFORM SINGLE TXN
             with transaction.atomic():
                 with connection.cursor() as cursor:     
-                    cursor.execute("UPDATE auth_user SET first_name = %s, last_name = %s, email = %s, username = %s WHERE id = %s"
-                            , [userupdate_form.cleaned_data['first_name'], userupdate_form.cleaned_data['last_name'], userupdate_form.cleaned_data['email'], userupdate_form.cleaned_data['email'], current_user.id])
+                    cursor.execute("UPDATE auth_user SET first_name = %s, last_name = %s WHERE id = %s"
+                            , [userupdate_form.cleaned_data['first_name'], userupdate_form.cleaned_data['last_name'], current_user.id])
                     cursor.execute("UPDATE app_usersext SET dob = %s WHERE user_id = %s"
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
-            return redirect('/parent_profile_page')
+            return redirect('/parent_profile')
     # If this is a GET (or any other method) create the default form.
     else:
         userupdate_form = UserUpdateForm
@@ -252,8 +282,8 @@ def nanny_profile_update(request):
 
     return render(request, 'app/Nanny Profile Update.html',{'userupdate_form':userupdate_form})
 
-
 #NANNY BROWSE JOBS CREATED BY PARENTS
+
 @login_required
 def nanny_opportunities(request):
     if request.method == 'POST':
@@ -287,7 +317,7 @@ def nanny_opportunities(request):
             print(max_end_time.strftime("%M"))
             # print("%s %s %s %s %s %s %s %s %s %s %s",min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(min_experience_req), min_start_time.strftime("%-H"),min_start_time.strftime("%-H"),min_start_time.strftime("%-M"), max_end_time.strftime("%-H"),max_end_time.strftime("%-H"),max_end_time.strftime("%-M"))
             with connection.cursor() as cursor:
-                cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement FROM auth_user u, app_jobs j WHERE (j.user_id=u.id AND j.start_date >= %s AND j.end_date <= %s AND j.rate>=%s AND j.experience_req<=%s) AND ((date_part('hour',j.start_time) > %s) OR ((date_part('hour',j.start_time) = %s AND (date_part('minute',j.start_time) > %s)))) AND ((date_part('hour',j.end_time) < %s) OR ((date_part('hour',j.end_time) = %s AND (date_part('minute',j.end_time) < %s))))",
+                cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement, j.jobid FROM auth_user u, app_jobs j WHERE (j.user_id=u.id AND j.start_date >= %s AND j.end_date <= %s AND j.rate>=%s AND j.experience_req<=%s) AND ((date_part('hour',j.start_time) > %s) OR ((date_part('hour',j.start_time) = %s AND (date_part('minute',j.start_time) > %s)))) AND ((date_part('hour',j.end_time) < %s) OR ((date_part('hour',j.end_time) = %s AND (date_part('minute',j.end_time) < %s))))",
                 [min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(max_experience_req), min_start_time.strftime("%H"),min_start_time.strftime("%H"),min_start_time.strftime("%M"), max_end_time.strftime("%H"),max_end_time.strftime("%H"),max_end_time.strftime("%M")]) 
                 results = namedtuplefetchall(cursor)
             return render(request, 'app/Nanny Opportunities.html',{'filterjob_form': JobFilter_form, 'results': results})
@@ -295,7 +325,7 @@ def nanny_opportunities(request):
     else:
         JobFilter_form = JobFilterForm
         with connection.cursor() as cursor:
-            cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement FROM auth_user u, app_jobs j WHERE j.user_id=u.id") 
+            cursor.execute("SELECT u.first_name, u.last_name, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.experience_req, j.job_requirement, j.jobid FROM auth_user u, app_jobs j WHERE j.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/Nanny Opportunities.html',{'filterjob_form': JobFilter_form, 'results': results})
 
@@ -319,7 +349,7 @@ def parents_browse_sitters(request):
             max_rate=NannyFilter_form.cleaned_data['max_rate']
             min_experience_req=NannyFilter_form.cleaned_data['min_experience_req']
             with connection.cursor() as cursor:
-                cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE (n.user_id=u.id AND n.start_date <= %s AND n.end_date >= %s AND n.rate<=%s AND n.experience>=%s) AND ((date_part('hour',n.start_time) < %s) OR ((date_part('hour',n.start_time) = %s AND (date_part('minute',n.start_time) < %s)))) AND ((date_part('hour',n.end_time) > %s) OR ((date_part('hour',n.end_time) = %s AND (date_part('minute',n.end_time) > %s))))",
+                cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me, n.id FROM auth_user u, app_nanny n WHERE (n.user_id=u.id AND n.start_date <= %s AND n.end_date >= %s AND n.rate<=%s AND n.experience>=%s) AND ((date_part('hour',n.start_time) < %s) OR ((date_part('hour',n.start_time) = %s AND (date_part('minute',n.start_time) < %s)))) AND ((date_part('hour',n.end_time) > %s) OR ((date_part('hour',n.end_time) = %s AND (date_part('minute',n.end_time) > %s))))",
                 [max_start_date.strftime("%Y-%m-%d"), min_end_date.strftime("%Y-%m-%d"), str(max_rate), str(min_experience_req), max_start_time.strftime("%H"),max_start_time.strftime("%H"),max_start_time.strftime("%M"), min_end_time.strftime("%H"),min_end_time.strftime("%H"),min_end_time.strftime("%M")]) 
                 results = namedtuplefetchall(cursor)
             return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
@@ -327,11 +357,11 @@ def parents_browse_sitters(request):
     else:
         NannyFilter_form = NannyFilterForm
         with connection.cursor() as cursor:
-            cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
+            cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me, n.id FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
 @login_required
-def jobview(request, id):
+def nanny_view_offer(request, id):
     # dictionary for initial data with
     # field names as keys
     context ={}
@@ -360,9 +390,11 @@ def jobview(request, id):
                 status = 'You have already applied!'
     
     context['status'] = status
-    return render(request,'app/jobview.html',{'jobv': view_job, 'status': status })
-@login_required
-def nannyview(request, id):
+    print(view_job)
+    return render(request,'app/Nanny view offer.html',{'jobv': view_job, 'status': status })
+
+def parent_view_sitter(request,id):
+
     # dictionary for initial data with
     # field names as keys
     context ={}
@@ -380,7 +412,7 @@ def nannyview(request, id):
         current_user = request.user
         with connection.cursor() as cursor:
             #check if nanny already applied
-            cursor.execute('SELECT requestid FROM app_request WHERE fromparent_id = %s', [str(current_user.id)])
+            cursor.execute('SELECT requestid FROM app_request WHERE fromparent_id = %s AND tositter_id = %s', [str(current_user.id),id])
             curr_nannyid = cursor.fetchone()
             ## No nanny with same id
             if curr_nannyid == None:
@@ -389,12 +421,15 @@ def nannyview(request, id):
                 return redirect('/parent_browse_sitters')
             else:
                 status = 'You have already requested!'
+                messages.info(request, 'You have already requested!')
     
     context['status'] = status
-    return render(request,'app/nannyview.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
-
+    return render(request,'app/Parent view sitter.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
+    
+    
 @login_required
-def nannyreqs(request):
+
+def nanny_requests(request):
     """Shows the main page""" 
     current_user = request.user
     ## Accept
@@ -403,7 +438,7 @@ def nannyreqs(request):
         if request.POST['action'] == 'accept':
             with connection.cursor() as cursor:
                 cursor.execute("UPDATE app_request SET status='accepted' WHERE requestid = %s", [request.POST['id']])
-                cursor.execute("SELECT u.username FROM auth_user u,app_request r WHERE r.requestid = %s and r.fromparent=u.id", [request.POST['id']])
+                cursor.execute("SELECT u.username FROM auth_user u,app_request r WHERE r.requestid = %s and r.fromparent_id=u.id", [request.POST['id']])
                 view_email = cursor.fetchone()
                 print(view_email)
                 
@@ -418,17 +453,17 @@ def nannyreqs(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT u.first_name, u.last_name, r.requestid, u.id FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'pending'])
         pendings = cursor.fetchall()
-        cursor.execute("SELECT u.first_name, u.last_name, u.username FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'accepted'])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, u.id FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'accepted'])
         accepts = cursor.fetchall()
         cursor.execute("SELECT u.first_name, u.last_name FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'rejected'])
         rejects = cursor.fetchall()
 
     result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects}
 
-    return render(request,'app/nannyreq.html',result_dict)
+    return render(request,'app/Nanny Requests.html',result_dict)
 
 @login_required
-def parentjobs(request,id):
+def nanny_view_parent_jobs(request,id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [id])
         results = cursor.fetchall()
@@ -437,49 +472,69 @@ def parentjobs(request,id):
         print(name)
         
         result_dict = {'record':results, 'names':name}
-    return render(request,'app/parentjobs.html',result_dict)
+    return render(request,'app/Nanny view parent jobs.html',result_dict)
 
 @login_required
-def parentoffers(request,id):
+def parent_offers(request):
+    current_user = request.user
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s AND status='pending'", [str(current_user.id)])
+        results = cursor.fetchall()
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s AND status='closed'", [str(current_user.id)])
+        resultsclosed = cursor.fetchall()
+        cursor.execute("SELECT first_name, last_name FROM auth_user WHERE id = %s", [str(current_user.id)])
+        name = cursor.fetchone()
+        print(name)
+        
+        result_dict = {'record':results, 'names':name, 'resultsclosed':resultsclosed}
+    return render(request,'app/Parent Offers.html',result_dict)
+
+def view_applicants(request,id):
     current_user = request.user
     ## Accept
+    jobidnow=id
+    # print('id now is'+str(jobidnow))
     if request.POST:
-        
+        # print('thingy to delete is'+str(request.POST['ids']))
         if request.POST['action'] == 'accept':
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE app_appliednanny SET status='accepted' WHERE applyid = %s", [request.POST['id']])
+                cursor.execute("UPDATE app_appliednanny SET status='accepted' WHERE applyid = %s", [request.POST['ids']])
+                cursor.execute("UPDATE app_jobs SET status='closed' WHERE jobid = %s", [id])
+                
                 
                 
         if request.POST['action'] == 'reject':
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE app_appliednanny SET status='rejected' WHERE applyid = %s", [request.POST['id']])
-                
-
+                cursor.execute("UPDATE app_appliednanny SET status='rejected' WHERE applyid = %s", [request.POST['ids']])
+      
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'pending',id])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid, n.start_date, n.start_time, n.end_date, n.end_time, n.rate, n.experience, n.about_me FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'pending',jobidnow])
         pendings = cursor.fetchall()
-        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'accepted',id])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid, n.start_date, n.start_time, n.end_date, n.end_time, n.rate, n.experience, n.about_me FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'accepted',jobidnow])
         accepts = cursor.fetchall()
-        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'rejected',id])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid, n.start_date, n.start_time, n.end_date, n.end_time, n.rate, n.experience, n.about_me FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'rejected',jobidnow])
         rejects = cursor.fetchall()
-
+    
     result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects, 'jobid':id}
-
-    return render(request,'app/parentoffers.html',result_dict)
+    print(result_dict['pending'])
+    return render(request,'app/Parent view offer applicants.html',result_dict)
 
 #VIEW ALL JOBS WHICH NANNY (CURRENT USER) HAS APPLIED
 @login_required
-def nannyalljobview(request):
+def nanny_application(request):
     # dictionary for initial data with field names as keys
     result_dict ={}
     current_user = request.user
+    print(current_user.id)
     with connection.cursor() as cursor:
-        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement p.status FROM app_jobs j LEFT JOIN app_appliednanny p ON j.jobid = p.jobid_id WHERE j.user_id = %s  ORDER BY p.applyid"
-                        , [current_user.id])
-        results = cursor.fetchone()
-    result_dict['record']=results
-    return render(request, "app/nannyalljobview.html", result_dict)
+        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement, a.status FROM app_jobs j, app_appliednanny a, app_nanny n WHERE j.jobid=a.jobid_id and a.nannyid_id=n.id and n.user_id = %s",[str(current_user.id)])
+        results = cursor.fetchall()
+    result_dict={'records': results}
+    
+    print(results)
+    print(result_dict)
+    return render(request, "app/Nanny Application.html", result_dict)
 
 @login_required
 def logoutuser(request):
@@ -574,7 +629,7 @@ def edit(request, id):
 
 #OLD NANNY AVAIL ADD
 @login_required
-def nannyscheduleadd(request):
+def nanny_availability_create(request):
     # Create a form instance and populate it with data from the request (binding):
     nannyavail_form = NannyAvailableForm(request.POST)
     # Check if the form is valid:
@@ -591,12 +646,12 @@ def nannyscheduleadd(request):
                                 about_me = nannyavail_form.cleaned_data['about_me'])
         availability.save()
         messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
-        return redirect('/nannyscheduleadd')
+        return redirect('/nanny_page')
 
     else:
         nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
 
-    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})
+    return render(request, 'app/Nanny Availability Create.html',{'nannyavail_form': nannyavail_form})
 
 
 #-----------------------------------WHY ARE U HERE-----------------------------------#

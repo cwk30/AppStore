@@ -21,7 +21,6 @@
 					<nav>
 						<ul>
 							<li><a href="{%url 'Nanny Hub'%}">Nanny Hub</a></li>
-							<li><a href="{%url 'Nanny Bookings'%}">Bookings</a></li>
 							<li><a href="{%url 'Application'%}"">Application</a></li>
 							<li><a href="{%url 'Requests'%}">Requests</a></li>
 							<li><a href="{%url 'Opportunities'%}">Opportunities</a></li>
@@ -37,41 +36,65 @@
 						<div class="inner">
 							<br>
 							<h2>Update Profile</h2>
-							
-							
-							<p>Phasellus convallis elit id ullamcorper pulvinar. Duis aliquam turpis mauris, eu ultricies erat malesuada quis. Aliquam dapibus, lacus eget hendrerit bibendum, urna est aliquam sem, sit amet imperdiet est velit quis lorem.</p>
 						
 								<section>
-									<form method="post" action="#">
+									<form method="POST" action="">
+										{% csrf_token  %}
 										<div class="fields">
-											<div class="field quarter">
-												<label for="first name">First Name</label>
-												<input type="text" name="first name" id="first name" />
-											</div>
-											<div class="field quarter">
-												<label for="last name">Last Name</label>
-												<input type="text" name="last name" id="last name" />
-											</div>
 											<div class="field half">
-												<label for="email">Email</label>
-												<input type="text" name="email" id="email" />
+												{{ userupdate_form.first_name.label }}
+							
+												{% if userupdate_form.first_name.errors %}  
+													{{ userupdate_form.first_name}}
+													<div class="invalid-feedback">
+														{% for error in userupdate_form.first_name.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ userupdate_form.first_name }}
+												{% endif %}
 											</div>
-											<div class="field third">
-												<label for="NRIC">NRIC</label>
-												<p>NRIC no</p>
+							
+											<div class="field half">
+												{{ userupdate_form.last_name.label }}
+							
+												{% if userupdate_form.last_name.errors %}  
+													{{ userupdate_form.last_name}}
+													<div class="invalid-feedback">
+														{% for error in userupdate_form.last_name.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ userupdate_form.last_name }}
+												{% endif %}
 											</div>
-											<div class="field third">
-												<label for="Password">Password</label>
-												<input type="text" name="Password" id="Password" />
+					
+							
+											<div class="field half">
+												{{ userupdate_form.dob.label }}
+							
+												{% if userupdate_form.dob.errors %}  
+													{{ userupdate_form.dob}}
+													<div class="invalid-feedback">
+														{% for error in userupdate_form.dob.errors %}
+															<span>{{ error }}</span> 
+														{% endfor %}
+													</div>
+												{% else %}
+													{{ userupdate_form.dob }}
+												{% endif %}
 											</div>
-											<div class="field third">
-												<label for="DOB">Date of Birth</label>
-												<input type="text" name="DOB" id="DOB" />
-											</div>
+							
+								 
+								   
+								  
 										</div>
 										<ul class="actions">
-											<li><a href="{%url 'Nanny Profile Page' %}" class="button">Update</a></li>
+											<li><input type="submit" value=Submit></li>
 										</ul>
+							
 									</form>
 								</section>
 							

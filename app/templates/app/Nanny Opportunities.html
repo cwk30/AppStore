@@ -21,7 +21,6 @@
 					<nav>
 						<ul>
 							<li><a href="{%url 'Nanny Hub'%}">Nanny Hub</a></li>
-							<li><a href="{%url 'Nanny Bookings'%}">Bookings</a></li>
 							<li><a href="{%url 'Application'%}"">Application</a></li>
 							<li><a href="{%url 'Requests'%}">Requests</a></li>
 							<li><a href="{%url 'Opportunities'%}">Opportunities</a></li>
@@ -162,11 +161,11 @@
 											<b>Daily Start time:</b> {{ item.4 }}<br>
 											<b>Daily End Time</b>: {{ item.5 }}<br>
 										</p>
-										<footer>
+									
 											<ul class="actions">
-												<li><input type="submit" value=View></li>
+												<a href="{% url 'Nanny view offer' id=item.9 %}" class="button">View</a>
 											</ul>
-										</footer>
+										
 									</section>
 								</div>
 							{% endfor %}

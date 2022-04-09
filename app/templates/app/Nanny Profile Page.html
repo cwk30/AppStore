@@ -21,7 +21,6 @@
 					<nav>
 						<ul>
 							<li><a href="{%url 'Nanny Hub'%}">Nanny Hub</a></li>
-							<li><a href="{%url 'Nanny Bookings'%}">Bookings</a></li>
 							<li><a href="{%url 'Application'%}"">Application</a></li>
 							<li><a href="{%url 'Requests'%}">Requests</a></li>
 							<li><a href="{%url 'Opportunities'%}">Opportunities</a></li>
@@ -51,7 +50,7 @@
 											</div>
 											<div class="field half">
 												<label for="email">Email</label>
-												<p>{{ records.3 }}</p>
+												<p>{{ user.username }}</p>
 											</div>
 											<div class="field third">
 												<label for="NRIC">NRIC</label>
@@ -76,35 +75,36 @@
 										<div class="fields">
 											<div class="field quarter">
 												<label for="Start Date">Start Date</label>
-												<p> {{ records.5 }} </p>
-											</div>
-											<div class="field quarter">
-												<label for="End Date">End Date</label>
 												<p> {{ records.6 }} </p>
 											</div>
 											<div class="field quarter">
+												<label for="End Date">End Date</label>
+												<p> {{ records.7 }} </p>
+											</div>
+											<div class="field quarter">
 												<label for="Start Time">Start Time</label>
-												<p> {{ records.7 }}</p>
+												<p> {{ records.8 }}</p>
 											</div>
 											<div class="field quarter">
 												<label for="End Time">End Time</label>
-												<p> {{ records.8 }} </p>
-											</div>
-											<div class="field half">
-												<label for="Rate">Rate</label>
 												<p> {{ records.9 }} </p>
 											</div>
 											<div class="field half">
+												<label for="Rate">Rate</label>
+												<p> {{ records.10 }} </p>
+											</div>
+											<div class="field half">
 												<label for="Experience">Experience</label>
-												<p>{{ records.10 }}</p>
+												<p>{{ records.11 }}</p>
 											</div>
 											<div class="field ">
 												<label for="About me">About me</label>
-												<p> {{ records.11 }} </p>
+												<p> {{ records.12 }} </p>
 											</div
 										</div>
 										<ul class="actions">
 											<li><a href="{% url 'Nanny Availability Update' %}" class="button">Update Availability and Experience</a></li>
+											<li><a href="{% url 'Nanny Availability Create' %}" class="button">Create Availability and Experience</a></li>
 										</ul>
 									</form>
 								</section>

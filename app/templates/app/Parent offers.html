@@ -22,7 +22,6 @@
 					<nav>
 						<ul>
 							<li><a href="{%url 'Parent Hub'%}">Parent Hub</a></li>
-							<li><a href="{%url 'Parent Bookings'%}">Bookings</a></li>
 							<li><a href="{%url 'Offers'%}">Offers</a></li>
 							<li><a href="{%url 'Browse Sitters'%}">Browse Sitters</a></li>
 							<li><a href="{%url 'Parent Profile Page'%}">Profile</a></li>
@@ -37,7 +36,7 @@
 						<div class="inner">
 							<div class ="align-center">
 								<a href="#two" class="button">Open Offers</a>
-								<a href="#three" class="button">Past Offers</a>
+								<a href="#three" class="button">Accepted Offers</a>
 								<a href="{% url 'Make an Offer' %}" class="button">Make a new offer!</a>
 							</div>
 						</div>
@@ -45,57 +44,49 @@
 						<div class = "inner">
 							<h2>Open Offers</h2>
 							<div id ="two" class="row">
+								
+								{% for item in record %}
 								<div class="col-4 col-6-medium col-12-medium">
 									<section class="box">
-										<header>
-											<h3>Job ID</h3>
-										</header>
-										<p>Job description goes here</p>
+										<p>Start date: {{item.1}}</p>
+										<p>End date: {{item.3}}</p>
+										<p>Start time: {{item.2}}</p>
+										<p>End time: {{item.4}}</p>
+										<p>Rate: {{item.5}}</p>
+										<p>Experience required: {{item.6}}</p>
+										<p>Job requirement: {{item.7}}</p>
 										<footer>
 											<ul class="actions">
-												<a href="{% url 'View Applicants' %}" class="button small">Choose Nanny</a>
-												<a href="#" class="button small">Close Offer</a>
+												<a href="view_applicants/{{item.0}}" class="button small">Choose Nanny</a>
 											</ul>
 										</footer>
 									</section>
 								</div>
-								<div class="col-4 col-6-medium col-12-medium">
-									<section class="box">
-										<header>
-											<h3>Job ID</h3>
-										</header>
-										<p>Job description goes here</p>
-										<footer>
-											<ul class="actions">
-												<a href="{% url 'View Applicants' %}" class="button small">Choose Nanny</a>
-												<a href="#" class="button small">Close Offer</a>
-											</ul>
-										</footer>
-									</section>
-								</div>
+								{% endfor %}
+								
 							</div>
 						</div>
 						<div class = "inner">
-							<h2>Past Offers</h2>
+							<h2>Accepted Offers</h2>
 							<div id ="three" class="row">
+								{% for item in resultsclosed %}
 								<div class="col-4 col-6-medium col-12-medium">
 									<section class="box">
-										<header>
-											<h3>Job ID</h3>
-										</header>
-										<p>Job description goes here</p>
-			
+										<p>Start date: {{item.1}}</p>
+										<p>End date: {{item.3}}</p>
+										<p>Start time: {{item.2}}</p>
+										<p>End time: {{item.4}}</p>
+										<p>Rate: {{item.5}}</p>
+										<p>Experience required: {{item.6}}</p>
+										<p>Job requirement: {{item.7}}</p>
+										<footer>
+											<ul class="actions">
+												<a href="view_applicants/{{item.0}}" class="button small">View Application Results</a>
+											</ul>
+										</footer>
 									</section>
 								</div>
-								<div class="col-4 col-6-medium col-12-medium">
-									<section class="box">
-										<header>
-											<h3>Job ID</h3>
-										</header>
-										<p>Job description goes here</p>
-										
-									</section>
-								</div>
+								{% endfor %}
 							</div>
 						</div>
 					</section>

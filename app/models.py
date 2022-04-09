@@ -30,7 +30,7 @@ class nanny(models.Model):
     end_time = models.TimeField()
     rate = models.IntegerField()
     experience = models.IntegerField()
-    about_me = models.TextField(('describe yourself'), max_length=500,blank=True)
+    about_me = models.TextField(('About me'), max_length=500,blank=True)
     
 class appliednanny(models.Model):
     applyid = models.AutoField(primary_key = True)

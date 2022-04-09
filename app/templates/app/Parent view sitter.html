@@ -7,7 +7,7 @@
 -->
 <html>
 	<head>
-		<title>Parent Hub</title>
+		<title>Sitter</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
@@ -29,56 +29,38 @@
 				</div>
 			</section>
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+		
 				<!-- Three -->
-					<section id="three" class="wrapper style2 fade-up">
+					<section class="wrapper style3 fade-up">
 						<div class="inner">
-							<h1>Welcome Back!</h1>
-							
-							<div class="split style2">
+							<br>
+							<h1>{{ fname }} {{ lname }}</h1>
+							<div>
 								<section>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field full">
-												<label for="name">Number of accepted offers with us: {{bookings}}</label>
-											</div>
-											<div class="field full">
-												<label for="email">Number of requests with us: {{requests}}</label>
-											</div>
-											
-										</div>
+									<p>
+										<b>Start Date:</b> {{ nannyv.1 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>End Date:</b> {{ nannyv.3 }}<br>
+										<b>Daily Start time:</b> {{ nannyv.2 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>Daily End Time</b>: {{ nannyv.4 }}<br>
+										<b>Rate:</b> {{ nannyv.5 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>Experience:</b> {{ nannyv.6 }}<br>
+										<b>Description:</b> {{ nannyv.7 }}<br>
+									</p>
+									
+									 <!-- Create a Form -->
+									 <form method="POST">
+										<!-- Security token by Django -->
+										{% csrf_token %}
+										<!-- form -->
 										<ul class="actions">
-											<li><a href="{% url 'Make an Offer' %}" class="button">Create more offers!</a></li>
-											<li><a href="{% url 'Browse Sitters' %}" class="button">Find more sitters!</a></li>
+											<li><input type="Submit" value="Request to Connect"></li>
 										</ul>
 									</form>
 								</section>
-								<section>
-									<ul class="contact">
-										<h1>Our supersitter</h1>
-										<li>
-											<h3>Sitter with the most requests:</h3>
-											<h2>{{supersitter.0}} {{supersitter.1}}</h2>
-											with {{supersitter.2}} bookings!<br />
-										</li>
-										
-										<li>
-											<h3>Find us on!</h3>
-											<ul class="icons">
-												<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-												<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-												<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-												<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-												<li><a href="#" class="icon brands fa-linkedin-in"><span class="label">LinkedIn</span></a></li>
-											</ul>
-										</li>
-									</ul>
-								</section>
-							</div>
+
 						</div>
 					</section>
-
+					
 			</div>
 
 		<!-- Footer -->
