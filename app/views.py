@@ -256,8 +256,7 @@ def nannyscheduleadd(request):
     if nannyavail_form.is_valid():
         # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
         current_user = request.user
-        with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM app_nanny WHERE user_id = %s",str(current_user.id))
+        
         availability = nanny(user=current_user, 
                                 start_date=nannyavail_form.cleaned_data['start_date'], 
                                 start_time=nannyavail_form.cleaned_data['start_time'],
@@ -593,35 +592,6 @@ def edit(request, id):
     context["status"] = status
  
     return render(request, "app/edit.html", context)
-
-#OLD NANNY AVAIL ADD
-@login_required
-def nannyscheduleadd(request):
-    # Create a form instance and populate it with data from the request (binding):
-    nannyavail_form = NannyAvailableForm(request.POST)
-    # Check if the form is valid:
-    if nannyavail_form.is_valid():
-        # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
-        current_user = request.user
-        with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM app_nanny WHERE user = current_user")
-        availability = nanny(user=current_user, 
-                                start_date=nannyavail_form.cleaned_data['start_date'], 
-                                start_time=nannyavail_form.cleaned_data['start_time'],
-                                end_date=nannyavail_form.cleaned_data['end_date'],
-                                end_time=nannyavail_form.cleaned_data['end_time'],
-                                rate=nannyavail_form.cleaned_data['rate'],
-                                experience=nannyavail_form.cleaned_data['experience'],
-                                about_me = nannyavail_form.cleaned_data['about_me'])
-        availability.save()
-        messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
-        return redirect('/nannyscheduleadd')
-
-    else:
-        nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
-
-    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})
-
 
 #-----------------------------------WHY ARE U HERE-----------------------------------#
 # @login_required
