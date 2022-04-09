@@ -219,15 +219,16 @@ def nanny_availability_update(request):
         if nannyavail_form.is_valid():
             # print("%s %s %s %s %s %s %s %s %s %s %s",min_start_date.strftime("%Y-%m-%d"), max_end_date.strftime("%Y-%m-%d"), str(min_rate), str(min_experience_req), min_start_time.strftime("%-H"),min_start_time.strftime("%-H"),min_start_time.strftime("%-M"), max_end_time.strftime("%-H"),max_end_time.strftime("%-H"),max_end_time.strftime("%-M"))
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s FROM auth_user u, app_nanny n WHERE n.user_id = u.id AND n.user_id = %s"
-                        , [nannyavail_form.cleaned_data['start_date'], nannyavail_form.cleaned_data['end_date'], nannyavail_form.cleaned_data['start_time'],
-                            nannyavail_form.cleaned_data['end_time'] , nannyavail_form.cleaned_data['rate'], nannyavail_form.cleaned_data['experience'], nannyavail_form.cleaned_data['about_me'], str(request.user.id)])
-            return redirect('/nannyscheduleview')
+                cursor.execute("UPDATE app_nanny SET start_date = %s, end_date = %s, start_time = %s, end_time = %s, rate = %s, experience = %s, about_me = %s WHERE user_id = %s"
+                        , [str(nannyavail_form.cleaned_data['start_date']), str(nannyavail_form.cleaned_data['end_date']), str(nannyavail_form.cleaned_data['start_time']),
+                            str(nannyavail_form.cleaned_data['end_time']) , str(nannyavail_form.cleaned_data['rate']), str(nannyavail_form.cleaned_data['experience']), str(nannyavail_form.cleaned_data['about_me']), str(request.user.id)])
+            
+            return redirect('/Nanny Profile Page')
     # If this is a GET (or any other method) create the default form.
     else:
         nannyavail_form = NannyAvailableForm
     
-    return render(request, 'app/Nanny Availability Update.html',{'nannyavail_form': nannyavail_form})
+    return render(request, 'app/nannyavailabilityupdate.html',{'nannyavail_form': nannyavail_form})
 
 #UPDATE PROFILE 
 @login_required
@@ -247,6 +248,7 @@ def nanny_profile_update(request):
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
             return redirect('/nanny_profile_page')
     # If this is a GET (or any other method) create the default form.
+
 def nannyscheduleadd(request):
     # Create a form instance and populate it with data from the request (binding):
     nannyavail_form = NannyAvailableForm(request.POST)
@@ -414,6 +416,7 @@ def nannyview(request, id):
     
     context['status'] = status
     return render(request,'app/nannyview.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
+
 def nannyreqs(request):
     """Shows the main page""" 
 
