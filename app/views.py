@@ -153,7 +153,7 @@ def parent_profile(request):
     current_user = request.user
     result_dict = {}
     with connection.cursor() as cursor:
-        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.username, e.dob FROM auth_user u left join app_usersext e on u.id = e.user_id where u.id = %s"
+        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob FROM auth_user u left join app_usersext e on u.id = e.user_id where u.id = %s"
                         , [current_user.id])
         results = cursor.fetchone()
     result_dict['records'] = results
@@ -190,7 +190,7 @@ def nanny_profile_page(request):
     current_user = request.user
     result_dict = {}
     with connection.cursor() as cursor:
-        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.username, e.dob, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u left join app_usersext e on  u.id = e.user_id left join app_nanny n on u.id = n.user_id where u.id = %s"
+        cursor.execute("SELECT e.nric, u.first_name, u.last_name, u.email, e.dob, u.password, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u left join app_usersext e on  u.id = e.user_id left join app_nanny n on u.id = n.user_id where u.id = %s"
                         , [current_user.id])
         results = cursor.fetchone()
     result_dict['records'] = results
@@ -246,36 +246,7 @@ def nanny_profile_update(request):
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
             return redirect('/nanny_profile_page')
     # If this is a GET (or any other method) create the default form.
-    else:
-        userupdate_form = UserUpdateForm
 
-    return render(request, 'app/Nanny Profile Update.html',{'userupdate_form': userupdate_form})
-
-@login_required
-def nannyscheduleadd(request):
-    # Create a form instance and populate it with data from the request (binding):
-    nannyavail_form = NannyAvailableForm(request.POST)
-    # Check if the form is valid:
-    if nannyavail_form.is_valid():
-        # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
-        current_user = request.user
-        
-        availability = nanny(user=current_user, 
-                                start_date=nannyavail_form.cleaned_data['start_date'], 
-                                start_time=nannyavail_form.cleaned_data['start_time'],
-                                end_date=nannyavail_form.cleaned_data['end_date'],
-                                end_time=nannyavail_form.cleaned_data['end_time'],
-                                rate=nannyavail_form.cleaned_data['rate'],
-                                experience=nannyavail_form.cleaned_data['experience'],
-                                about_me = nannyavail_form.cleaned_data['about_me'])
-        availability.save()
-        messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
-        return redirect('/nannyscheduleadd')
-
-    else:
-        userupdate_form = UserUpdateForm
-
-    return render(request, 'app/profileupdatenanny.html',{'userupdate_form': userupdate_form})
 
 #NANNY BROWSE JOBS CREATED BY PARENTS
 
@@ -602,6 +573,33 @@ def edit(request, id):
     context["status"] = status
  
     return render(request, "app/edit.html", context)
+
+#OLD NANNY AVAIL ADD
+@login_required
+def nannyscheduleadd(request):
+    # Create a form instance and populate it with data from the request (binding):
+    nannyavail_form = NannyAvailableForm(request.POST)
+    # Check if the form is valid:
+    if nannyavail_form.is_valid():
+        # process the data in form.cleaned_data as required (here we just write it to the model due_back field)     
+        current_user = request.user
+        availability = nanny(user=current_user, 
+                                start_date=nannyavail_form.cleaned_data['start_date'], 
+                                start_time=nannyavail_form.cleaned_data['start_time'],
+                                end_date=nannyavail_form.cleaned_data['end_date'],
+                                end_time=nannyavail_form.cleaned_data['end_time'],
+                                rate=nannyavail_form.cleaned_data['rate'],
+                                experience=nannyavail_form.cleaned_data['experience'],
+                                about_me = nannyavail_form.cleaned_data['about_me'])
+        availability.save()
+        messages.info(request, 'Your available schedule creation is successful! Parents looking for nannies can now see your availability.')
+        return redirect('/nannyscheduleadd')
+
+    else:
+        nannyavail_form = NannyAvailableForm # If this is a GET (or any other method) create the default form.
+
+    return render(request, 'app/nannyscheduleadd.html',{'nannyavail_form': nannyavail_form})
+
 
 #-----------------------------------WHY ARE U HERE-----------------------------------#
 # @login_required
