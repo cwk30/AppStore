@@ -366,7 +366,7 @@ def parent_view_sitter(request,id):
         current_user = request.user
         with connection.cursor() as cursor:
             #check if nanny already applied
-            cursor.execute('SELECT requestid FROM app_request WHERE fromparent_id = %s', [str(current_user.id)])
+            cursor.execute('SELECT requestid FROM app_request WHERE fromparent_id = %s AND tositter_id = %s', [str(current_user.id),id])
             curr_nannyid = cursor.fetchone()
             ## No nanny with same id
             if curr_nannyid == None:
@@ -407,7 +407,7 @@ def nanny_requests(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT u.first_name, u.last_name, r.requestid, u.id FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'pending'])
         pendings = cursor.fetchall()
-        cursor.execute("SELECT u.first_name, u.last_name, u.username FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'accepted'])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, u.id FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'accepted'])
         accepts = cursor.fetchall()
         cursor.execute("SELECT u.first_name, u.last_name FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'rejected'])
         rejects = cursor.fetchall()
