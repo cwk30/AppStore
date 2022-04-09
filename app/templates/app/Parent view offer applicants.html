@@ -31,24 +31,88 @@
 			</section>
 			
 				<!-- One -->
-					<section id="one" class="wrapper style1 fade-up">
-						<div class = "inner">
-							<h2>Nanny Name</h2>
-							<p> Offer details goes here</p>
-							<section class="wrapper">
-								<div class = "inner">
-									<div class ="align-center">
-										<ul class="actions">
-											<a href="#" class="button">Request Nanny</a>
-										</ul>
-									</div>
-								</div>
-
-							</section>
-		
+				<section id="three" class="wrapper style1 fade-up">
+					<br>
+					<div class="inner">
+						<div class ="align-center">
+							<a href="#two" class="button">Pending Applicants</a>
+							<a href="#three" class="button">Rejected Applicants</a>
+							<a href="#four" class="button">Accepted Applicants</a>
 						</div>
-					</section>
+					</div>
 
+					<div class = "inner">
+						<h2>Pending Applicants</h2>
+						<div id ="two" class="row">
+							
+							{% for item in pending %}
+							<div class="col-4 col-6-medium col-12-medium">
+								<section class="box">
+									<h3>{{item.0}} {{item.1}}</h3>
+									<p>Start date: {{item.5}}</p>
+									<p>End date: {{item.7}}</p>
+									<p>Start time: {{item.6}}</p>
+									<p>End time: {{item.8}}</p>
+									<p>Rate: {{item.9}}</p>
+									<p>Experience: {{item.10}}</p>
+									<p>About Me: {{item.11}}</p>
+									<footer>
+										<ul class="actions">
+											<form method="POST" style="display: inline;">
+												{% csrf_token %}
+												<input type="hidden" name="ids" value="{{item.4}}">
+												<button onclick="return confirm('Are you sure you want to reject {{record.0}}?');" type="submit" name="action" value="reject">Reject</button>
+												<button onclick="return confirm('Are you sure you want to accept {{record.0}}?');" type="submit" name="action" value="accept">Accept</button> 
+											</form>
+										</ul>
+									</footer>
+								</section>
+							</div>
+							{% endfor %}
+							
+						</div>
+					</div>
+					<div class = "inner">
+						<h2>Rejected Applicants</h2>
+						<div id ="three" class="row">
+							{% for item in rejected %}
+							<div class="col-4 col-6-medium col-12-medium">
+								<section class="box">
+									<h3>{{item.0}} {{item.1}}</h3>
+									<p>Start date: {{item.5}}</p>
+									<p>End date: {{item.7}}</p>
+									<p>Start time: {{item.6}}</p>
+									<p>End time: {{item.8}}</p>
+									<p>Rate: {{item.9}}</p>
+									<p>Experience: {{item.10}}</p>
+									<p>About Me: {{item.11}}</p>
+								</section>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+					<div class = "inner">
+						<h2>Accepted Applicants</h2>
+						<div id ="four" class="row">
+							{% for item in accepted %}
+							<div class="col-4 col-6-medium col-12-medium">
+								<section class="box">
+									<h3>{{item.0}} {{item.1}}</h3>
+									<p>Email: {{item.2}}
+									<p>Start date: {{item.5}}</p>
+									<p>End date: {{item.7}}</p>
+									<p>Start time: {{item.6}}</p>
+									<p>End time: {{item.8}}</p>
+									<p>Rate: {{item.9}}</p>
+									<p>Experience: {{item.10}}</p>
+									<p>About Me: {{item.11}}</p>
+								</section>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+					
+				</section>
 			</div>
 
 		<!-- Footer -->

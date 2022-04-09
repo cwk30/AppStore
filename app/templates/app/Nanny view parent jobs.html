@@ -47,6 +47,9 @@
 											<p><b>Rate:</b> {{item.5}}</p>
 											<p><b>Experience required:</b> {{item.6}}</p>
 											<p><b>Job required:</b> {{item.7}}</p>
+											<ul class="actions">
+												<a href="{% url 'Nanny view offer' id=item.0 %}" class="button">View</a>
+											</ul>
 											</div>
 									</div>
 									{% endfor %}
