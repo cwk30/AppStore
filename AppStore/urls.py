@@ -40,7 +40,7 @@ urlpatterns = [
     path('parent_page', app.views.parent_page, name='Parent Hub'),
     path('parent_profile', app.views.parent_profile, name='Parent Profile Page'),
     path('parent_bookings', app.views.parent_bookings, name='Parent Bookings'),
-    path('view_applicants', app.views.view_applicants, name='View Applicants'),
+    path('view_applicants/<str:id>', app.views.view_applicants, name='View Applicants'),
     path('nanny_profile_update', app.views.nanny_profile_update, name='Nanny Profile Update'),
     path('nanny_availability_update', app.views.nanny_availability_update, name='Nanny Availability Update'),
     path('parent_profile_update', app.views.parent_profile_update, name='Parent Profile Update'),
@@ -58,8 +58,8 @@ urlpatterns = [
     # path('nannyedit', app.views.nannyedit, name='nannyedit'),
     #path('nannyreqs', app.views.nannyreqs, name='nannyreqs'),
     #path('parentjobs/<str:id>', app.views.parentjobs, name='parentjobs'),
-    path('nanny_view_parent_jobs/<str:id>',app.views.nanny_view_parent_jobs,name='Nanny view parent jobs'),
-    path('parentoffers/<str:id>', app.views.parentoffers, name='parentoffers')
+    path('nanny_view_parent_jobs/<str:id>',app.views.nanny_view_parent_jobs,name='Nanny view parent jobs')
+    # path('parentoffers/<str:id>', app.views.parentoffers, name='parentoffers')
     
 
 ]

@@ -32,8 +32,6 @@ def parent_page(request):
 
 def parent_bookings(request):
     return render(request,'app/Parent Bookings.html')
-def view_applicants(request):
-    return render(request,'app/Parent view offer applicants.html')
 
 def elements(request):
     return render(request,'app/elements.html')
@@ -445,35 +443,36 @@ def parent_offers(request):
         result_dict = {'record':results, 'names':name, 'resultsclosed':resultsclosed}
     return render(request,'app/Parent Offers.html',result_dict)
 
-def parentoffers(request,id):
+def view_applicants(request,id):
     current_user = request.user
     ## Accept
+    jobidnow=id
+    # print('id now is'+str(jobidnow))
     if request.POST:
-        
+        # print('thingy to delete is'+str(request.POST['ids']))
         if request.POST['action'] == 'accept':
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE app_appliednanny SET status='accepted' WHERE applyid = %s", [request.POST['id']])
-                cursor.execute("UPDATE app_job SET status='closed' WHERE jobid = %s", [id])
+                cursor.execute("UPDATE app_appliednanny SET status='accepted' WHERE applyid = %s", [request.POST['ids']])
+                cursor.execute("UPDATE app_jobs SET status='closed' WHERE jobid = %s", [id])
                 
                 
                 
         if request.POST['action'] == 'reject':
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE app_appliednanny SET status='rejected' WHERE applyid = %s", [request.POST['id']])
-                
-
+                cursor.execute("UPDATE app_appliednanny SET status='rejected' WHERE applyid = %s", [request.POST['ids']])
+      
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'pending',id])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid, n.start_date, n.start_time, n.end_date, n.end_time, n.rate, n.experience, n.about_me FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'pending',jobidnow])
         pendings = cursor.fetchall()
-        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'accepted',id])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid, n.start_date, n.start_time, n.end_date, n.end_time, n.rate, n.experience, n.about_me FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'accepted',jobidnow])
         accepts = cursor.fetchall()
-        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'rejected',id])
+        cursor.execute("SELECT u.first_name, u.last_name, u.username, n.id, a.applyid, n.start_date, n.start_time, n.end_date, n.end_time, n.rate, n.experience, n.about_me FROM app_appliednanny a, app_jobs j, app_nanny n, auth_user u WHERE a.jobid_id=j.jobid AND j.user_id=%s AND a.nannyid_id=n.id AND n.user_id=u.id AND a.status=%s AND j.jobid=%s",[str(current_user.id),'rejected',jobidnow])
         rejects = cursor.fetchall()
-
+    
     result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects, 'jobid':id}
-
-    return render(request,'app/parentoffers.html',result_dict)
+    print(result_dict['pending'])
+    return render(request,'app/Parent view offer applicants.html',result_dict)
 
 #VIEW ALL JOBS WHICH NANNY (CURRENT USER) HAS APPLIED
 @login_required
