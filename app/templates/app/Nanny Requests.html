@@ -34,60 +34,36 @@
 		<!-- Wrapper -->
 			<div id="wrapper">
 
-				<!-- Two -->
-					<section id="two" class="wrapper style3 fade-up">
+				<!-- One -->
+					<section id="One" class="wrapper style3 fade-up">
 
 						
 						<div class="inner">
 							<div class="align-center">
-								<a href="#two" class="button">Current Request</a>
-								<a href="#three" class="button">Pending Requests</a>
+								<a href="#One" class="button">Pending Request</a>
+								<a href="#two" class="button">Accepted Requests</a>
+								<a href="#Three" class="button">Rejected Requests</a>
 							</div>
 							
 							<h2>Pending Requests</h2>
 							<p>Find parents who request for your service here.</p>
 							<div class="features">
+								{% for record in pending %}
 								<section>
-									<span class="icon solid major fa-code"></span>
-									<h3>Lorem ipsum amet</h3>
+									<h3>{{ record.0 }} {{ record.1 }}</h3>
 									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
 									<div class="align-center">
+										<a href="parentjobs/{{record.3}}"><button>View</button></a>
 										<a href="#" class="button">Accept</a>
 										<a href="#" class="button">Reject</a>
 									</div>
 								</section>
-								<section>
-									<span class="icon solid major fa-lock"></span>
-									<h3>Aliquam sed nullam</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-cog"></span>
-									<h3>Sed erat ullam corper</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-desktop"></span>
-									<h3>Veroeros quis lorem</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon solid major fa-link"></span>
-									<h3>Urna quis bibendum</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-								<section>
-									<span class="icon major fa-gem"></span>
-									<h3>Aliquam urna dapibus</h3>
-									<p>Phasellus convallis elit id ullam corper amet et pulvinar. Duis aliquam turpis mauris, sed ultricies erat dapibus.</p>
-								</section>
-							
-							
+								{% endfor %}
 						</div>
 					</section>
 
-				<!-- Three -->
-					<section id="three" class="wrapper style3 fade-up">
+				<!-- Two -->
+					<section id="Two" class="wrapper style3 fade-up">
 						<div class="inner">
 							<h2>Accepted Requests</h2>
 							<div class="features">

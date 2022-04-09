@@ -71,21 +71,7 @@
 													{{ userupdate_form.last_name }}
 												{% endif %}
 											</div>
-							
-											<div class="field half">
-												{{ userupdate_form.email.label }}
-							
-												{% if userupdate_form.email.errors %}  
-													{{ userupdate_form.email}}
-													<div class="invalid-feedback">
-														{% for error in userupdate_form.email.errors %}
-															<span>{{ error }}</span> 
-														{% endfor %}
-													</div>
-												{% else %}
-													{{ userupdate_form.email }}
-												{% endif %}
-											</div>
+					
 							
 											<div class="field half">
 												{{ userupdate_form.dob.label }}

@@ -129,7 +129,7 @@
 													{{ nannyavail_form.experience }}
 												{% endif %}
 											</div>
-											<div class="field half">
+											<div class="field">
 												{{ nannyavail_form.about_me.label }}
 							
 												{% if nannyavail_form.about_me.errors %}  
@@ -143,10 +143,16 @@
 													{{ nannyavail_form.about_me }}
 												{% endif %}
 											</div>
+										<div class="wrapper">
+											<div class ="inner">
+												<ul class="actions">
+													<li><a href="{%url 'Nanny Profile Page' %}" class="button">Update</a></li>
+												</ul>
+											</div>
+
+										</div>
 							
-										<ul class="actions">
-											<li><a href="{%url 'Nanny Profile Page' %}" class="button">Update</a></li>
-										</ul>
+										
 									</form>
 								</section>
 							

@@ -20,28 +20,17 @@ def namedtuplefetchall(cursor):
 # Create your views here.
 def index(request):
     return render(request,'app/landing.html')
-
 def nanny_page(request):
     return render(request,'app/Nanny Page.html')
 def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
 
 
-
-
-def nanny_profile_page(request):
-    return render(request,'app/Nanny Profile Page.html')
-
-
-def nanny_requests(request):
-    return render(request,'app/Nanny Requests.html')
-
 def parent_offers(request):
     return render(request,'app/Parent offers.html')
 def parent_page(request):
     return render(request,'app/Parent page.html')
-def parent_profile(request):
-    return render(request,'app/Parent profile.html')
+
 def parent_bookings(request):
     return render(request,'app/Parent Bookings.html')
 def view_applicants(request):
@@ -68,13 +57,13 @@ def parentloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='parent')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/parent#login')
+            return redirect('/parent_page')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
                 messages.info(request, 'Login Successful')
-                return redirect('/parent#login')
+                return redirect('/parent_page')
             else:
                 messages.info(request, 'Login fail')
                 return redirect('/parent#login')
@@ -99,13 +88,13 @@ def nannyloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='nanny')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/parent#login')
+            return redirect('/nanny_page')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
                 messages.info(request, 'Login Successful')
-                return redirect('/nanny#login')
+                return redirect('/nanny_page')
             else:
                 messages.info(request, 'Login fail')
                 return redirect('/nanny#login')
@@ -246,7 +235,9 @@ def nanny_profile_update(request):
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
             return redirect('/nanny_profile_page')
     # If this is a GET (or any other method) create the default form.
+    userupdate_form = UserUpdateForm
 
+    return render(request, 'app/Nanny Profile Update.html',{'userupdate_form':userupdate_form})
 
 #NANNY BROWSE JOBS CREATED BY PARENTS
 
@@ -393,7 +384,8 @@ def parent_view_sitter(request):
     
     
 @login_required
-def nannyreqs(request):
+
+def nanny_requests(request):
     """Shows the main page""" 
     current_user = request.user
     ## Accept
@@ -424,7 +416,7 @@ def nannyreqs(request):
 
     result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects}
 
-    return render(request,'app/nannyreq.html',result_dict)
+    return render(request,'app/Nanny Requests.html',result_dict)
 
 @login_required
 def parentjobs(request,id):
@@ -473,9 +465,9 @@ def nanny_application(request):
     # dictionary for initial data with field names as keys
     result_dict ={}
     current_user = request.user
+    print(current_user.id)
     with connection.cursor() as cursor:
-        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement, p.status FROM app_jobs j LEFT JOIN app_appliednanny p ON j.jobid = p.jobid_id WHERE j.user_id = %s  ORDER BY p.applyid"
-                        , [current_user.id])
+        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement, a.status FROM app_jobs j, app_appliednanny a, app_nanny n WHERE j.jobid=a.jobid_id and a.nannyid_id=n.id and n.user_id = %s",[str(current_user.id)])
         results = cursor.fetchall()
     result_dict={'records': results}
     
