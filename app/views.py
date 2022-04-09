@@ -60,11 +60,21 @@ def parent_page(request):
         cursor.execute("SELECT u.first_name, u.last_name, COUNT(r.tositter_id) FROM app_request r, auth_user u WHERE r.tositter_id = u.id GROUP BY u.first_name, u.last_name ORDER BY COUNT(u.first_name) DESC LIMIT 1")
         countsc = cursor.fetchone()
         
-        
-    result_dict['bookings'] = counts[0]
-    result_dict['offers'] = countsa[0]
-    result_dict['requests'] = countsb[0]
-    result_dict['supersitter']=countsc
+    if counts is None:
+        result_dict['bookings'] = 0
+    else:
+        result_dict['bookings'] = counts[0]
+    if countsa is None:
+        result_dict['offers'] = 0
+    else:
+        result_dict['offers'] = countsa[0]
+    if countsb is None:
+        result_dict['requests'] = 0
+    else:
+        result_dict['requests'] = countsb[0]
+    
+    result_dict['supersitter'] = countsc
+    
 
     return render(request,'app/Parent page.html',result_dict)
 
@@ -89,7 +99,7 @@ def parentloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='parent')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/parent_page')
+            return redirect('/parent#login')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
@@ -120,7 +130,7 @@ def nannyloginregister(request):
             ue = usersext(user=user, nric=userregister_form.cleaned_data['nric'], dob=userregister_form.cleaned_data['date_of_birth'], role='nanny')
             ue.save()
             messages.info(request, 'Your registration is successful! Login with your credentials below to continue.')
-            return redirect('/nanny_page')
+            return redirect('/nanny#login')
         if userlogin_form.is_valid():
             user = authenticate(username=userlogin_form.cleaned_data['email'], password=userlogin_form.cleaned_data['password'])
             if user is not None:
@@ -185,6 +195,7 @@ def parent_profile(request):
 def parent_profile_update(request):
     current_user = request.user
     if request.method == 'POST':
+        
         # Create a form instance and populate it with data from the request (binding):
         userupdate_form = UserUpdateForm(request.POST)
         # Check if the form is valid:
@@ -192,11 +203,11 @@ def parent_profile_update(request):
             #PERFORM SINGLE TXN
             with transaction.atomic():
                 with connection.cursor() as cursor:     
-                    cursor.execute("UPDATE auth_user SET first_name = %s, last_name = %s, email = %s, username = %s WHERE id = %s"
-                            , [userupdate_form.cleaned_data['first_name'], userupdate_form.cleaned_data['last_name'], userupdate_form.cleaned_data['email'], userupdate_form.cleaned_data['email'], current_user.id])
+                    cursor.execute("UPDATE auth_user SET first_name = %s, last_name = %s WHERE id = %s"
+                            , [userupdate_form.cleaned_data['first_name'], userupdate_form.cleaned_data['last_name'], current_user.id])
                     cursor.execute("UPDATE app_usersext SET dob = %s WHERE user_id = %s"
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
-            return redirect('/parent_profile_page')
+            return redirect('/parent_profile')
     # If this is a GET (or any other method) create the default form.
     else:
         userupdate_form = UserUpdateForm

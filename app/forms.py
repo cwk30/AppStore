@@ -50,7 +50,6 @@ class NannyFilterForm(forms.Form):
 class UserUpdateForm(forms.Form):
     first_name = forms.CharField(max_length = 200)
     last_name = forms.CharField(max_length = 200)
-    email = forms.CharField(label='Email', max_length=100)
     dob = forms.DateField(label='Date of Birth', widget=forms.SelectDateWidget(years=range(1950, 2012)))
 
 

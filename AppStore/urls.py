@@ -40,7 +40,7 @@ urlpatterns = [
     path('parent_page', app.views.parent_page, name='Parent Hub'),
     path('parent_profile', app.views.parent_profile, name='Parent Profile Page'),
 
-    path('view_applicants', app.views.view_applicants, name='View Applicants'),
+    path('view_applicants/<str:id>', app.views.view_applicants, name='View Applicants'),
     path('nanny_profile_update', app.views.nanny_profile_update, name='Nanny Profile Update'),
     path('nanny_availability_update', app.views.nanny_availability_update, name='Nanny Availability Update'),
     path('parent_profile_update', app.views.parent_profile_update, name='Parent Profile Update'),
