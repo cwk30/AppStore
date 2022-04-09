@@ -349,7 +349,7 @@ def nanny_view_offer(request, id):
             
             ## No nanny with same id
             if curr_nannyid == None:
-                cursor.execute("INSERT INTO app_appliednanny (jobid_id,nannyid_id,status) VALUES (%s, %s,'pending')", [str(id), str(results[0][0])])
+                cursor.execute("INSERT INTO app_appliednanny (jobid_id,nannyid_id,status) SELECT %s, app_nanny.id,'pending' FROM app_nanny WHERE app_nanny.user_id=%s", [str(id), str(current_user.id)])
                 status = 'Applied successfully!'
                 return redirect('/nanny_opportunities')
             else:
