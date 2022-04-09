@@ -7,7 +7,7 @@
 -->
 <html>
 	<head>
-		<title>Sitter's Bookings</title>
+		<title>Parent's Jobs</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
@@ -36,66 +36,37 @@
 
 				<!-- One -->
 					<section id="One" class="wrapper style3 fade-up">
-
-						
-						<div class="inner">
-							<div class="align-center">
-								<a href="#One" class="button">Pending Request</a>
-								<a href="#two" class="button">Accepted Requests</a>
-								<a href="#Three" class="button">Rejected Requests</a>
-							</div>
-							
-							<h2>Pending Requests</h2>
-							<p>Find parents who request for your service here.</p>
-							<div class="features">
-								{% for record in pending %}
-								<section>
-									<h3>{{ record.0 }} {{ record.1 }}</h3>
-									<p></p>
-									<div class="align-center">
-					
-										<a href="nanny_view_parent_jobs/{{record.3}}" class="button">View</a>
-										<form method="POST" style="display: inline;">
-											{% csrf_token %}
-											<input type="hidden" name="id" value="{{record.2}}"/>
-											<button onclick="return confirm('Are you sure you want to reject {{record.0}}?');" type="submit" name="action" value="reject">Reject</button>
-											<button onclick="return confirm('Are you sure you want to accept {{record.0}}?');" type="submit" name="action" value="accept">Accept</button> 
-										  </form>
+							<div class ="wrapper">
+								<div class ="inner">
+								
+								<div class="features">
+									{% for item in record %}
+									<div class="wrapper">
+										<div class ="inner">
+											<p><b>Start date:</b> {{item.1}}  <b>End date:</b> {{item.3}}</p> 
+											<p><b>Start time:</b> {{item.2}} &nbsp;<b>End time</b>: {{item.4}}</p>
+											<p><b>Rate:</b> {{item.5}}</p>
+											<p><b>Experience required:</b> {{item.6}}</p>
+											<p><b>Job required:</b> {{item.7}}</p>
+											</div>
 									</div>
-								</section>
-								{% endfor %}
-						</div>
-					</section>
-
-				<!-- Two -->
-					<section id="Two" class="wrapper style3 fade-up">
-						<div class="inner">
-							<h2>Accepted Requests</h2>
-							<div class="features">
-								{% for record in accepted %}
-								<section>
-									<h3>{{ record.0 }} {{ record.1 }}</h3>
-									<p><b>Email:</b>{{ record.2 }}</p>
-								</section>
-								{% endfor %}
+									{% endfor %}
+								</div>
+								
+								</div>
 							</div>
+								
+                
+								<div class ="wrapper">
+									<div class ="inner">
+										<a href="{% url 'Requests' %}" class="button">Back to Requests</a>
+									</div>
+								</div>
+								
 						</div>
 					</section>
-				<!-- Three -->
-				<section id="Three" class="wrapper style3 fade-up">
-					<div class="inner">
-						<h2>Rejected Requests</h2>
-						<div class="features">
-							{% for record in rejected %}
-							<section>
-								<h3>{{ record.0 }} {{ record.1 }}</h3>
-							</section>
-							{% endfor %}
-						</div>
-					</div>
-				</section>
-
 			</div>
+
 
 		<!-- Footer -->
 			<footer id="footer" class="wrapper style1-alt">

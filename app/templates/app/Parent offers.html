@@ -65,6 +65,19 @@
 											<h3>Job ID</h3>
 										</header>
 										<p>Job description goes here</p>
+										{% for item in record %}
+            
+										<p>start date: {{item.1}}</p>
+										<p>start time: {{item.2}}</p>
+										<p>end date: {{item.3}}</p>
+										<p>end time: {{item.4}}</p>
+										<p>rate: {{item.5}}</p>
+										<p>experience req: {{item.6}}</p>
+										<p>job req: {{item.7}}</p>
+												
+											
+								 
+										{% endfor %}
 										<footer>
 											<ul class="actions">
 												<a href="{% url 'View Applicants' %}" class="button small">Choose Nanny</a>

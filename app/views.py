@@ -26,8 +26,7 @@ def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
 
 
-def parent_offers(request):
-    return render(request,'app/Parent offers.html')
+
 def parent_page(request):
     return render(request,'app/Parent page.html')
 
@@ -395,7 +394,7 @@ def nanny_requests(request):
         if request.POST['action'] == 'accept':
             with connection.cursor() as cursor:
                 cursor.execute("UPDATE app_request SET status='accepted' WHERE requestid = %s", [request.POST['id']])
-                cursor.execute("SELECT u.username FROM auth_user u,app_request r WHERE r.requestid = %s and r.fromparent=u.id", [request.POST['id']])
+                cursor.execute("SELECT u.username FROM auth_user u,app_request r WHERE r.requestid = %s and r.fromparent_id=u.id", [request.POST['id']])
                 view_email = cursor.fetchone()
                 print(view_email)
                 
@@ -420,7 +419,7 @@ def nanny_requests(request):
     return render(request,'app/Nanny Requests.html',result_dict)
 
 @login_required
-def parentjobs(request,id):
+def nanny_view_parent_jobs(request,id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [id])
         results = cursor.fetchall()
@@ -429,9 +428,21 @@ def parentjobs(request,id):
         print(name)
         
         result_dict = {'record':results, 'names':name}
-    return render(request,'app/parentjobs.html',result_dict)
+    return render(request,'app/Nanny view parent jobs.html',result_dict)
 
 @login_required
+def parent_offers(request):
+    current_user = request.user
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [str(current_user.id)])
+        results = cursor.fetchall()
+        cursor.execute("SELECT first_name, last_name FROM auth_user WHERE id = %s", [str(current_user.id)])
+        name = cursor.fetchone()
+        print(name)
+        
+        result_dict = {'record':results, 'names':name}
+    return render(request,'app/Parent Offers.html',result_dict)
+
 def parentoffers(request,id):
     current_user = request.user
     ## Accept
