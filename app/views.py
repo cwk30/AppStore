@@ -350,7 +350,7 @@ def nanny_view_offer(request, id):
     print(view_job)
     return render(request,'app/Nanny view offer.html',{'jobv': view_job, 'status': status })
 
-def parent_view_sitter(request):
+def parent_view_sitter(request,id):
 
     # dictionary for initial data with
     # field names as keys
