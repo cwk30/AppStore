@@ -20,23 +20,19 @@ def namedtuplefetchall(cursor):
 # Create your views here.
 def index(request):
     return render(request,'app/landing.html')
-def nanny_application(request):
-    return render(request,'app/Nanny Application.html')
+
 def nanny_page(request):
     return render(request,'app/Nanny Page.html')
 def nanny_bookings(request):
     return render(request,'app/Nanny Bookings.html')
-def nanny_opportunities(request):
-    return render(request,'app/Nanny Opportunities.html')
+
 
 
 
 def nanny_profile_page(request):
     return render(request,'app/Nanny Profile Page.html')
-def nanny_profile_update(request):
-    return render(request,'app/Nanny Profile Update.html')
-def nanny_availability_update(request):
-    return render(request,'app/Nanny Availability Update.html')
+
+
 def nanny_requests(request):
     return render(request,'app/Nanny Requests.html')
 
@@ -249,6 +245,11 @@ def nanny_profile_update(request):
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
             return redirect('/nanny_profile_page')
     # If this is a GET (or any other method) create the default form.
+    else:
+        userupdate_form = UserUpdateForm
+
+    return render(request, 'app/Nanny Profile Update.html',{'userupdate_form': userupdate_form})
+
 def nannyscheduleadd(request):
     # Create a form instance and populate it with data from the request (binding):
     nannyavail_form = NannyAvailableForm(request.POST)
@@ -276,6 +277,7 @@ def nannyscheduleadd(request):
     return render(request, 'app/profileupdatenanny.html',{'userupdate_form': userupdate_form})
 
 #NANNY BROWSE JOBS CREATED BY PARENTS
+
 @login_required
 def nanny_opportunities(request):
     if request.method == 'POST':
@@ -384,6 +386,7 @@ def nanny_view_offer(request, id):
                 status = 'You have already applied!'
     
     context['status'] = status
+    print(view_job)
     return render(request,'app/Nanny view offer.html',{'jobv': view_job, 'status': status })
 
 def parent_view_sitter(request):
@@ -439,16 +442,19 @@ def nannyreqs(request):
 
 #VIEW ALL JOBS WHICH NANNY (CURRENT USER) HAS APPLIED
 @login_required
-def nannyalljobview(request):
+def nanny_application(request):
     # dictionary for initial data with field names as keys
     result_dict ={}
     current_user = request.user
     with connection.cursor() as cursor:
-        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement p.status FROM app_jobs j LEFT JOIN app_appliednanny p ON j.jobid = p.jobid_id WHERE j.user_id = %s  ORDER BY p.applyid"
+        cursor.execute("SELECT j.jobid, j.start_date, j.end_date, j.start_time, j.end_time, j.rate, j.job_requirement, p.status FROM app_jobs j LEFT JOIN app_appliednanny p ON j.jobid = p.jobid_id WHERE j.user_id = %s  ORDER BY p.applyid"
                         , [current_user.id])
-        results = cursor.fetchone()
-    result_dict['record']=results
-    return render(request, "app/nannyalljobview.html", result_dict)
+        results = cursor.fetchall()
+    result_dict={'records': results}
+    
+    print(results)
+    print(result_dict)
+    return render(request, "app/Nanny Application.html", result_dict)
 
 
 def logoutuser(request):

@@ -43,29 +43,41 @@
 				<section class="wrapper style1 spotlights">
 						<div class = "inner">
 							<h2>Application</h2>
-							<table class="alt">
-								<thead>
-									<tr>
-										<th>Offer ID</th>
-										<th>Description</th>
-										<th>Rate</th>
-										<th>Start Date</th>
-										<th>End Date</th>
-										<th>status</th>
-
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>Item One</td>
-										<td>Ante turpis integer aliquet porttitor.</td>
-										<td>29.99</td>
-										<td>29.99</td>
-										<td>29.99</td>
-										<td>29.99</td>
-									</tr>
-								</tfoot>
-							</table>
+							<div class = "table-wrapper">
+								<table class="alt">
+									<thead>
+										<tr>
+											<th>Offer ID</th>
+											<th>Start Date</th>
+											<th>End Date</th>
+											<th>Start Time</th>
+											<th>End Time</th>
+											<th>Rate</th>
+											<th>Job Requirement</th>
+											<th>Status</th>
+											
+	
+										</tr>
+									</thead>
+									<tbody>
+										{% for record in records %}  
+											<tr>
+											<td> {{ record.0 }} </td>
+											<td> {{ record.1 }} </td>
+											<td> {{ record.2 }} </td>
+											<td> {{ record.3 }} </td>
+											<td> {{ record.4 }} </td>
+											<td> {{ record.5 }} </td>
+											<td> {{ record.6 }} </td>
+											<td> {{ record.7 }} </td>
+										
+											</tr>
+										{% endfor %}
+										
+									</tfoot>
+								</table>
+							</div>
+							
 						</div>
 					
 			</div>
