@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE HTML>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Offer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="{% static 'app/main/assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'app/main/assets/css/noscript.css' %}" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Sidebar -->
+			<section id="sidebar">
+				<div class="inner">
+					<nav>
+						<ul>
+							<li><a href="{%url 'Nanny Hub'%}">Nanny Hub</a></li>
+							<li><a href="{%url 'Nanny Bookings'%}">Bookings</a></li>
+							<li><a href="{%url 'Application'%}"">Application</a></li>
+							<li><a href="{%url 'Requests'%}">Requests</a></li>
+							<li><a href="{%url 'Opportunities'%}">Opportunities</a></li>
+							<li><a href="{%url 'Nanny Profile Page'%}">Profile</a></li>
+						</ul>
+					</nav>
+				</div>
+			</section>
+
+		
+				<!-- Three -->
+					<section id="three" class="wrapper style3 fade-up">
+						<div class="inner">
+							<br>
+							<h1>Offer ID</h1>
+							<div>
+								<section>
+									<header>
+										<h3>{{ item.0 }} {{ item.1}}</h3>
+									</header>
+									<p>
+										<b>Start Date:</b> {{ jobv.1 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>End Date:</b> {{ jobv.3 }}<br>
+										<b>Daily Start time:</b> {{ jobv.2 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>Daily End Time</b>: {{ jobv.4 }}<br>
+										<b>Rate:</b> {{ jobv.5 }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<b>Experience:</b> {{ jobv.6 }}<br>
+										<b>Description:</b> {{ jobv.7 }}<br>
+									</p>
+									
+									 <!-- Create a Form -->
+									 <form method="POST">
+										<!-- Security token by Django -->
+										{% csrf_token %}
+										<!-- form -->
+										<ul class="actions">
+											<li><input type="Submit" value=Apply></li>
+										</ul>
+									</form>
+								</section>
+
+						</div>
+					</section>
+					
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer" class="wrapper style1-alt">
+				<div class="inner">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="{% static 'app/main/assets/js/jquery.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/jquery.scrollex.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/jquery.scrolly.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/browser.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/breakpoints.min.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/util.js' %}"></script>
+			<script src="{% static 'app/main/assets/js/main.js' %}"></script>
+
+	</body>
+</html>
