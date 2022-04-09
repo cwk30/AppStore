@@ -162,6 +162,7 @@ def parent_profile(request):
     return render(request,'app/Parent Profile.html',result_dict)
 
 #UPDATE PARENT PROFILE (CURRENT USER)
+@login_required
 def parent_profile_update(request):
     current_user = request.user
     if request.method == 'POST':
@@ -247,6 +248,7 @@ def nanny_profile_update(request):
                             ,  [userupdate_form.cleaned_data['dob'], current_user.id])
             return redirect('/nanny_profile_page')
     # If this is a GET (or any other method) create the default form.
+@login_required
 def nannyscheduleadd(request):
     # Create a form instance and populate it with data from the request (binding):
     nannyavail_form = NannyAvailableForm(request.POST)
@@ -350,7 +352,7 @@ def parents_browse_sitters(request):
             cursor.execute("SELECT u.first_name, u.last_name, n.start_date, n.end_date, n.start_time, n.end_time, n.rate, n.experience, n.about_me FROM auth_user u, app_nanny n WHERE n.user_id=u.id") 
             results = namedtuplefetchall(cursor)    
     return render(request, 'app/Parent browse sitter.html',{'NannyFilter_form': NannyFilter_form, 'results': results})
-
+@login_required
 def jobview(request, id):
     # dictionary for initial data with
     # field names as keys
@@ -383,7 +385,7 @@ def jobview(request, id):
     
     context['status'] = status
     return render(request,'app/jobview.html',{'jobv': view_job, 'status': status })
-
+@login_required
 def nannyview(request, id):
     # dictionary for initial data with
     # field names as keys
@@ -414,6 +416,8 @@ def nannyview(request, id):
     
     context['status'] = status
     return render(request,'app/nannyview.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
+
+@login_required
 def nannyreqs(request):
     """Shows the main page""" 
     current_user = request.user
@@ -447,6 +451,7 @@ def nannyreqs(request):
 
     return render(request,'app/nannyreq.html',result_dict)
 
+@login_required
 def parentjobs(request,id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM app_jobs WHERE user_id = %s", [id])
@@ -458,6 +463,7 @@ def parentjobs(request,id):
         result_dict = {'record':results, 'names':name}
     return render(request,'app/parentjobs.html',result_dict)
 
+@login_required
 def parentoffers(request,id):
     current_user = request.user
     ## Accept
@@ -499,7 +505,7 @@ def nannyalljobview(request):
     result_dict['record']=results
     return render(request, "app/nannyalljobview.html", result_dict)
 
-
+@login_required
 def logoutuser(request):
     logout(request)
     user = None
