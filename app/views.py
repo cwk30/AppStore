@@ -416,22 +416,36 @@ def nannyview(request, id):
     return render(request,'app/nannyview.html',{'nannyv': view_nanny, 'fname': targetuser.first_name, 'lname': targetuser.last_name, 'status': status })
 def nannyreqs(request):
     """Shows the main page""" 
-
-    ## Delete customer
+    current_user = request.user
+    ## Accept
     if request.POST:
-        current_user = request.user
-        if request.POST['action'] == 'delete':
+        
+        if request.POST['action'] == 'accept':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM customers WHERE customerid = %s", [request.POST['id']])
+                cursor.execute("UPDATE app_request SET status='accepted' WHERE requestid = %s", [request.POST['id']])
+                cursor.execute("SELECT u.username FROM auth_user u,app_request r WHERE r.requestid = %s and r.fromparent=u.id", [request.POST['id']])
+                view_email = cursor.fetchone()
+                print(view_email)
+                
+                messages.info(request,view_email )
+        
+        if request.POST['action'] == 'reject':
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE app_request SET status='rejected' WHERE requestid = %s", [request.POST['id']])
+                
 
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM request WHERE tositter_id= %s",[str(current_user.id)])
-        requests = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, r.requestid FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'pending'])
+        pendings = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name, u.username FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'accepted'])
+        accepts = cursor.fetchall()
+        cursor.execute("SELECT u.first_name, u.last_name FROM app_request r, auth_user u WHERE tositter_id= %s and status=%s and r.fromparent_id=u.id",[str(current_user.id),'rejected'])
+        rejects = cursor.fetchall()
 
-    result_dict = {'records': requests}
+    result_dict = {'pending': pendings, 'accepted':accepts, 'rejected':rejects}
 
-    return render(request,'app/nannyreqs.html',result_dict)
+    return render(request,'app/nannyreq.html',result_dict)
 
 #VIEW ALL JOBS WHICH NANNY (CURRENT USER) HAS APPLIED
 @login_required

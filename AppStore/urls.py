@@ -54,6 +54,7 @@ urlpatterns = [
     # path('parentsbrowsenannies', app.views.parentsbrowsenannies, name='parentsbrowsenannies'),
     path('jobview/<str:id>', app.views.jobview, name='jobview'),
     path('nannyview/<str:id>', app.views.nannyview, name='nannyview'),
-    # path('nannyedit', app.views.nannyedit, name='nannyedit')
+    # path('nannyedit', app.views.nannyedit, name='nannyedit'),
+    path('nannyreqs', app.views.nannyreqs, name='nannyreqs')
 
 ]
