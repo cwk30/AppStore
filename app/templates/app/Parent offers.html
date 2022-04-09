@@ -45,22 +45,9 @@
 						<div class = "inner">
 							<h2>Open Offers</h2>
 							<div id ="two" class="row">
+								
+								{% for item in record %}
 								<div class="col-4 col-6-medium col-12-medium">
-									<section class="box">
-										<header>
-											<h3>Job ID</h3>
-										</header>
-										<p>Job description goes here</p>
-										<footer>
-											<ul class="actions">
-												<a href="{% url 'View Applicants' %}" class="button small">Choose Nanny</a>
-												<a href="#" class="button small">Close Offer</a>
-											</ul>
-										</footer>
-									</section>
-								</div>
-								<div class="col-4 col-6-medium col-12-medium">
-									{% for item in record %}
 									<section class="box">
 										<p>Start date: {{item.1}}</p>
 										<p>End date: {{item.3}}</p>
@@ -75,8 +62,9 @@
 											</ul>
 										</footer>
 									</section>
-									{% endfor %}
 								</div>
+								{% endfor %}
+								
 							</div>
 						</div>
 						<div class = "inner">
